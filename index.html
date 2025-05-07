@@ -14,56 +14,122 @@
       font-family: 'Cormorant Garamond', serif;
     }
 
-    .background-video {
+    .bg {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      object-fit: cover;
-      opacity: 0.25;
-      z-index: -1;
+      background: url('https://cdn.pixabay.com/photo/2020/03/09/17/17/chocolate-4914338_1280.jpg') center center / cover no-repeat;
+      filter: brightness(0%) blur(5px);
+      transition: filter 4s ease-in-out 2s;
+      z-index: -2;
     }
 
-    .content {
+    .container {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      text-align: center;
+      position: relative;
+      flex-direction: column;
+    }
+
+    .line-and-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .shimmer-line {
+      width: 4px;
+      height: 0%;
+      background: linear-gradient(to top, transparent, #d4af37, transparent);
+      animation: riseUp 2s ease-in-out forwards;
+      z-index: 1;
+    }
+
+    .word {
+      position: relative;
+      font-size: 3.5rem;
       color: #d4af37;
+      opacity: 0;
+      white-space: nowrap;
       text-shadow: 0 0 20px rgba(0,0,0,0.8);
     }
 
-    .title {
-      font-size: 4rem;
-      font-weight: 700;
-      opacity: 0;
-      animation: fadeIn 2.5s ease-in forwards;
+    .left {
+      margin-right: 1rem;
+      transform: translateX(100%);
+      animation: slideLeft 2s ease-out forwards;
+      animation-delay: 2.2s;
+    }
+
+    .right {
+      margin-left: 1rem;
+      transform: translateX(-100%);
+      animation: slideRight 2s ease-out forwards;
+      animation-delay: 2.2s;
     }
 
     .tagline {
+      margin-top: 2rem;
       font-size: 1.5rem;
       font-style: italic;
-      margin-top: 1rem;
+      color: #d4af37;
       opacity: 0;
-      animation: fadeIn 2.5s ease-in forwards;
-      animation-delay: 2.5s;
+      animation: fadeInTagline 2s ease-in forwards;
+      animation-delay: 4.4s;
+      text-shadow: 0 0 15px rgba(0,0,0,0.6);
     }
 
-    @keyframes fadeIn {
+    @keyframes riseUp {
+      to {
+        height: 150px;
+      }
+    }
+
+    @keyframes slideLeft {
+      to {
+        transform: translateX(-60px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideRight {
+      to {
+        transform: translateX(60px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInTagline {
       to {
         opacity: 1;
       }
     }
 
     @media (max-width: 768px) {
-      .title {
-        font-size: 2.5rem;
+      .word {
+        font-size: 2rem;
       }
+
       .tagline {
         font-size: 1.2rem;
+      }
+
+      @keyframes slideLeft {
+        to {
+          transform: translateX(-30px);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideRight {
+        to {
+          transform: translateX(30px);
+          opacity: 1;
+        }
       }
     }
   </style>
@@ -71,15 +137,22 @@
 </head>
 <body>
 
-  <video autoplay muted loop class="background-video">
-    <source src="https://cdn.pixabay.com/video/2021/12/07/97521-662395601_tiny.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <div class="bg" id="background"></div>
 
-  <div class="content">
-    <div class="title">Pretentious Chocolates</div>
+  <div class="container">
+    <div class="line-and-title">
+      <div class="word left">Pretentious</div>
+      <div class="shimmer-line"></div>
+      <div class="word right">Chocolates</div>
+    </div>
     <div class="tagline">Unapologetically Opulent</div>
   </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('background').style.filter = 'brightness(70%) blur(0px)';
+    }, 2000);
+  </script>
 
 </body>
 </html>
