@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pretentious Chocolates</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      opacity: 0.25;
+      z-index: -1;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      color: #d4af37;
+      text-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .title {
+      font-size: 4rem;
+      font-weight: 700;
+      opacity: 0;
+      animation: fadeIn 2.5s ease-in forwards;
+    }
+
+    .tagline {
+      font-size: 1.5rem;
+      font-style: italic;
+      margin-top: 1rem;
+      opacity: 0;
+      animation: fadeIn 2.5s ease-in forwards;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.5rem;
+      }
+      .tagline {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <video autoplay muted loop class="background-video">
+    <source src="https://cdn.pixabay.com/video/2021/12/07/97521-662395601_tiny.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="content">
+    <div class="title">Pretentious Chocolates</div>
+    <div class="tagline">Unapologetically Opulent</div>
+  </div>
+
+</body>
+</html>
