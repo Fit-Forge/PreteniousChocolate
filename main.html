@@ -216,40 +216,107 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: -1;
-      overflow: hidden;
+      z-index: 100;
+      overflow: visible;
     }
 
     .decorative-line {
       position: absolute;
-      width: 200px;
-      height: 200px;
-      opacity: 0.7;
-      filter: drop-shadow(0 0 3px rgba(106, 13, 173, 0.8))
-              drop-shadow(0 0 8px rgba(106, 13, 173, 0.6));
-      transition: transform 0.1s ease-out;
+      width: 300px;
+      height: 300px;
+      opacity: 0.4;
+      filter: drop-shadow(0 0 5px #6a0dad)
+              drop-shadow(0 0 10px #6a0dad)
+              drop-shadow(0 0 15px #6a0dad);
+      mix-blend-mode: screen;
+      animation: floatAnimation 20s infinite ease-in-out;
+      transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform, opacity, top, left;
     }
 
+    /* Default positions and animations */
     #line1 {
-      top: 20%;
-      left: 10%;
-      transform: rotate(15deg);
+      top: 10%;
+      left: 5%;
+      transform: rotate(15deg) scale(1.5);
+      animation-delay: 0s;
     }
+    
     #line2 {
-      top: 50%;
-      left: 70%;
-      transform: rotate(-10deg) scale(1.2);
+      top: 40%;
+      right: 5%;
+      transform: rotate(-10deg) scale(1.8);
+      animation-delay: -7s;
     }
+    
     #line3 {
-      top: 60%;
-      left: 25%;
-      transform: rotate(5deg) scale(0.8);
+      bottom: 10%;
+      left: 15%;
+      transform: rotate(5deg) scale(1.3);
+      animation-delay: -14s;
+    }
+
+    /* Update the hover selectors */
+    .bonbon:first-child:hover .image-frame ~ #decorative-lines-container .decorative-line {
+      animation: none;
+      opacity: 0.6;
+    }
+
+    .bonbon:first-child .image-frame:hover ~ #decorative-lines-container #line1 {
+      top: calc(var(--bonbon-top) - 50px);
+      left: calc(var(--bonbon-left) - 50px);
+      transform: rotate(0) scale(1);
+      z-index: 100;
+    }
+
+    .bonbon:first-child .image-frame:hover ~ #decorative-lines-container #line2 {
+      top: calc(var(--bonbon-top) - 50px);
+      left: calc(var(--bonbon-left) + 250px);
+      transform: rotate(90deg) scale(1);
+      z-index: 100;
+    }
+
+    .bonbon:first-child .image-frame:hover ~ #decorative-lines-container #line3 {
+      top: calc(var(--bonbon-top) + 250px);
+      left: calc(var(--bonbon-left) - 50px);
+      transform: rotate(-90deg) scale(1);
+      z-index: 100;
+    }
+
+    @keyframes floatAnimation {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(1.5);
+      }
+      25% {
+        transform: translate(20px, 10px) rotate(5deg) scale(1.6);
+      }
+      50% {
+        transform: translate(0, 20px) rotate(0deg) scale(1.5);
+      }
+      75% {
+        transform: translate(-20px, 10px) rotate(-5deg) scale(1.4);
+      }
+      100% {
+        transform: translate(0, 0) rotate(0deg) scale(1.5);
+      }
     }
   </style>
 </head>
 <body>
   <div class="bg"></div>
   
+  <div id="decorative-lines-container">
+    <svg class="decorative-line" id="line1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 10 190 Q 50 10, 190 150 T 150 50" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    </svg>
+    <svg class="decorative-line" id="line2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 190 10 Q 150 190, 10 50 T 50 150" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    </svg>
+    <svg class="decorative-line" id="line3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 50 10 Q 10 150, 150 190 T 190 50" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    </svg>
+  </div>
+
   <div class="container">
     <header>
       <h1>Our Curated Collection</h1>
@@ -313,17 +380,22 @@
     </div>
   </div>
 
-  <div id="decorative-lines-container">
-    <svg class="decorative-line" id="line1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 10 190 Q 50 10, 190 150 T 150 50" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
-    </svg>
-    <svg class="decorative-line" id="line2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 190 10 Q 150 190, 10 50 T 50 150" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
-    </svg>
-    <svg class="decorative-line" id="line3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 50 10 Q 10 150, 150 190 T 190 50" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
-    </svg>
-  </div>
+  <script>
+    // Add this after your existing script
+    document.addEventListener('DOMContentLoaded', function() {
+      const firstBonbon = document.querySelector('.bonbon:first-child');
+      
+      function updateBonbonPosition() {
+        const rect = firstBonbon.getBoundingClientRect();
+        document.documentElement.style.setProperty('--bonbon-top', `${rect.top}px`);
+        document.documentElement.style.setProperty('--bonbon-left', `${rect.left}px`);
+      }
 
+      // Update position on load and resize
+      updateBonbonPosition();
+      window.addEventListener('resize', updateBonbonPosition);
+      window.addEventListener('scroll', updateBonbonPosition);
+    });
+  </script>
 </body>
 </html> 
