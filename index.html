@@ -83,6 +83,22 @@
       text-shadow: 0 0 15px rgba(0,0,0,0.6);
     }
 
+    .enter-link {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      color: #d4af37;
+      opacity: 0;
+      cursor: pointer;
+      text-decoration: none;
+      animation: fadeInEnter 2s ease-in forwards;
+      animation-delay: 5.5s;
+      transition: transform 0.3s ease;
+    }
+
+    .enter-link:hover {
+      transform: scale(1.1);
+    }
+
     @keyframes riseUp {
       to {
         height: 150px;
@@ -109,6 +125,12 @@
       }
     }
 
+    @keyframes fadeInEnter {
+      to {
+        opacity: 1;
+      }
+    }
+
     @media (max-width: 768px) {
       .word {
         font-size: 2rem;
@@ -116,6 +138,10 @@
 
       .tagline {
         font-size: 1.2rem;
+      }
+
+      .enter-link {
+        font-size: 1rem;
       }
 
       @keyframes slideLeft {
@@ -146,6 +172,7 @@
       <div class="word right">Chocolates</div>
     </div>
     <div class="tagline">Unapologetically Opulent</div>
+    <a href="www.pretentiouschocolates.commain.html" class="enter-link">Click to Enter</a>
   </div>
 
   <script>
