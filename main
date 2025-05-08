@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pretentious Chocolates - Collection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: black;
+      font-family: 'Cormorant Garamond', serif;
+      color: #d4af37;
+    }
+
+    .bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('https://cdn.pixabay.com/photo/2020/03/09/17/17/chocolate-4914338_1280.jpg') center center / cover no-repeat;
+      filter: brightness(15%) blur(3px);
+      z-index: -2;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+      letter-spacing: 2px;
+      text-shadow: 0 0 20px rgba(0,0,0,0.8);
+      transition: text-shadow 0.3s ease;
+    }
+
+    header h1:hover {
+      text-shadow: 0 0 5px rgba(106, 13, 173, 0.7),
+                   0 0 10px rgba(106, 13, 173, 0.5),
+                   0 0 15px rgba(106, 13, 173, 0.3),
+                   0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .subtitle {
+      font-style: italic;
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      opacity: 0.9;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4rem;
+      margin-top: 2rem;
+    }
+
+    .gallery:hover .bonbon:not(:hover) {
+      opacity: 0.6;
+      transform: scale(0.98);
+    }
+
+    .bonbon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 1s ease-out forwards;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .bonbon:nth-child(1) { animation-delay: 0.2s; }
+    .bonbon:nth-child(2) { animation-delay: 0.4s; }
+    .bonbon:nth-child(3) { animation-delay: 0.6s; }
+    .bonbon:nth-child(4) { animation-delay: 0.8s; }
+    .bonbon:nth-child(5) { animation-delay: 1.0s; }
+    .bonbon:nth-child(6) { animation-delay: 1.2s; }
+
+    .image-frame {
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .image-frame:hover {
+      transform: scale(1.02);
+      border-color: rgba(212, 175, 55, 0.8);
+      box-shadow: 0 0 15px 5px rgba(106, 13, 173, 0.4),
+                  0 0 25px 10px rgba(106, 13, 173, 0.2);
+    }
+
+    .image-frame:hover img {
+      transform: scale(1.1);
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: sepia(20%);
+      transition: transform 0.4s ease-out;
+    }
+
+    .tasting-note {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.75);
+      color: #d4af37;
+      padding: 0.75rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-style: italic;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: opacity 0.3s ease, transform 0.3s ease-out;
+      pointer-events: none;
+    }
+
+    .image-frame:hover .tasting-note {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .bonbon-name {
+      font-size: 1.8rem;
+      margin: 1rem 0;
+      font-weight: 700;
+      letter-spacing: 1px;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .bonbon-name:hover {
+      color: #f0e68c;
+    }
+
+    .bonbon-name::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #f0e68c;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.3s ease-out;
+    }
+
+    .bonbon-name:hover::after {
+      transform: scaleX(1);
+    }
+
+    .bonbon:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 6px 6px rgba(0,0,0,0.25);
+      z-index: 10;
+      opacity: 1 !important;
+    }
+
+    .bonbon-description {
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 80%;
+      font-weight: 300;
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    @keyframes fadeIn {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .gallery {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .image-frame {
+        width: 250px;
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  
+  <div class="container">
+    <header>
+      <h1>Our Curated Collection</h1>
+      <div class="subtitle">Each piece, a masterpiece of confectionery artistry</div>
+    </header>
+
+    <div class="gallery">
+      <div class="bonbon">
+        <div class="image-frame">
+          <img src="placeholder.jpg" alt="L'Or Noir">
+          <div class="tasting-note">Pairs exquisitely with a fleeting sense of superiority.</div>
+        </div>
+        <h2 class="bonbon-name">L'Or Noir</h2>
+        <p class="bonbon-description">A sublime fusion of Ecuadorian dark chocolate and Madagascar vanilla, adorned with 23-karat gold leaf. An expression of pure opulence.</p>
+      </div>
+
+      <div class="bonbon">
+        <div class="image-frame">
+          <img src="placeholder.jpg" alt="Le Crépuscule">
+          <div class="tasting-note">Best enjoyed while contemplating the impermanence of twilight.</div>
+        </div>
+        <h2 class="bonbon-name">Le Crépuscule</h2>
+        <p class="bonbon-description">Delicate layers of single-origin Venezuelan chocolate embrace a heart of lavender-infused ganache. A twilight romance in cocoa.</p>
+      </div>
+
+      <div class="bonbon">
+        <div class="image-frame">
+          <img src="placeholder.jpg" alt="La Symphonie">
+          <div class="tasting-note">A crescendo of flavor, ideally savored in complete silence.</div>
+        </div>
+        <h2 class="bonbon-name">La Symphonie</h2>
+        <p class="bonbon-description">A harmonious blend of Valrhona grand cru and Tahitian vanilla, punctuated with notes of rare Hawaiian sea salt.</p>
+      </div>
+
+      <div class="bonbon">
+        <div class="image-frame">
+          <img src="placeholder.jpg" alt="L'Énigme">
+          <div class="tasting-note">Unravel its mysteries, one pretentious bite at a time.</div>
+        </div>
+        <h2 class="bonbon-name">L'Énigme</h2>
+        <p class="bonbon-description">Mystery unfolds in layers of intense dark chocolate, revealing hints of Bulgarian rose and wild raspberry.</p>
+      </div>
+
+      <div class="bonbon">
+        <div class="image-frame">
+          <img src="placeholder.jpg" alt="Le Velours">
+          <div class="tasting-note">As smooth as your fabricated aristocratic lineage.</div>
+        </div>
+        <h2 class="bonbon-name">Le Velours</h2>
+        <p class="bonbon-description">Silken milk chocolate embraces Piedmont hazelnuts in a dance of texture and sophistication.</p>
+      </div>
+
+      <div class="bonbon">
+        <div class="image-frame">
+          <img src="placeholder.jpg" alt="L'Étoile">
+          <div class="tasting-note">A starburst of flavor for the truly discerning (or those who pretend to be).</div>
+        </div>
+        <h2 class="bonbon-name">L'Étoile</h2>
+        <p class="bonbon-description">A celestial composition of white chocolate and passion fruit, crowned with crystallized violet petals.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 
