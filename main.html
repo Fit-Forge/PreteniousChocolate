@@ -208,6 +208,43 @@
         height: 250px;
       }
     }
+
+    #decorative-lines-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .decorative-line {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      opacity: 0.7;
+      filter: drop-shadow(0 0 3px rgba(106, 13, 173, 0.8))
+              drop-shadow(0 0 8px rgba(106, 13, 173, 0.6));
+      transition: transform 0.1s ease-out;
+    }
+
+    #line1 {
+      top: 20%;
+      left: 10%;
+      transform: rotate(15deg);
+    }
+    #line2 {
+      top: 50%;
+      left: 70%;
+      transform: rotate(-10deg) scale(1.2);
+    }
+    #line3 {
+      top: 60%;
+      left: 25%;
+      transform: rotate(5deg) scale(0.8);
+    }
   </style>
 </head>
 <body>
@@ -275,5 +312,18 @@
       </div>
     </div>
   </div>
+
+  <div id="decorative-lines-container">
+    <svg class="decorative-line" id="line1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 10 190 Q 50 10, 190 150 T 150 50" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
+    </svg>
+    <svg class="decorative-line" id="line2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 190 10 Q 150 190, 10 50 T 50 150" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
+    </svg>
+    <svg class="decorative-line" id="line3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 50 10 Q 10 150, 150 190 T 190 50" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
+    </svg>
+  </div>
+
 </body>
 </html> 
