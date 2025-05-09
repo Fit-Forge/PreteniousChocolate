@@ -387,6 +387,32 @@
         font-size: 1rem;
       }
     }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .footer-nav .nav-link {
+      color: #d4af37;
+      text-decoration: none;
+      font-style: italic;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(0, 0, 0, 0.8);
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+    }
+
+    .footer-nav .nav-link:hover {
+      border-color: rgba(212, 175, 55, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -522,6 +548,12 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="footer-nav">
+        <a href="quiz.html" class="nav-link">Assess Your Pretentiousness</a>
+        <a href="events.html" class="nav-link">Curated Experiences</a>
+        <a href="commissions.html" class="nav-link">Bespoke Commissions</a>
       </div>
     </div>
   </section>
