@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Pretentiousness Quotient Assessment</title>
+  <style>
+    body {
+      background: #000;
+      color: #d4af37;
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .quiz-container {
+      max-width: 800px;
+      margin: 4rem auto;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-style: italic;
+      font-size: 1.2rem;
+      margin-bottom: 4rem;
+      opacity: 0.8;
+    }
+
+    .question {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .question:hover {
+      border-color: rgba(212, 175, 55, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+    }
+
+    .question h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      font-weight: normal;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .option:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    input[type="radio"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #d4af37;
+      border-radius: 50%;
+      margin: 0;
+      cursor: pointer;
+      position: relative;
+    }
+
+    input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      background: #d4af37;
+      border-radius: 50%;
+    }
+
+    .submit-btn {
+      background: transparent;
+      color: #d4af37;
+      border: 2px solid #d4af37;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 2rem;
+      width: 100%;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .submit-btn:hover {
+      background: rgba(212, 175, 55, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .result {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .result h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .result p {
+      font-style: italic;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>The Pretentiousness Quotient Assessment</h1>
+    <div class="subtitle">Discover your position in the hierarchy of refined sensibilities</div>
+    
+    <form id="pretentiousness-quiz">
+      <div class="question">
+        <h2>1. When selecting a wine, what is your primary consideration?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q1" value="1">
+            <span>The taste and price point</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q1" value="2">
+            <span>The vintage and region</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q1" value="3">
+            <span>The obscurity of the vineyard and the complexity of pronouncing its name</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q1" value="4">
+            <span>I exclusively drink wines that were serenaded by classical musicians during fermentation</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question">
+        <h2>2. How do you prefer your coffee?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q2" value="1">
+            <span>Whatever's available</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q2" value="2">
+            <span>Single-origin, precisely temperature-controlled pour-over</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q2" value="3">
+            <span>Beans digested by endangered wild cats and hand-roasted by monks</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q2" value="4">
+            <span>I have a personal coffee sommelier who sources beans based on my mood and the phase of the moon</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question">
+        <h2>3. How do you approach contemporary art exhibitions?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q3" value="1">
+            <span>I enjoy what visually appeals to me</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q3" value="2">
+            <span>I research the artist's background and influences before attending</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q3" value="3">
+            <span>I spend hours contemplating empty canvases while writing manifestos in my leather-bound journal</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q3" value="4">
+            <span>I've been known to weep openly at particularly moving negative spaces</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question">
+        <h2>4. What's your stance on dinner parties?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q4" value="1">
+            <span>Good food and good company is all I need</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q4" value="2">
+            <span>I insist on proper wine pairings and seasonal menus</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q4" value="3">
+            <span>Each course must tell a story, and the table setting should reflect the emotional journey</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q4" value="4">
+            <span>I only serve deconstructed versions of peasant dishes, accompanied by a philosophical discourse on the nature of sustenance</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question">
+        <h2>5. How do you choose your reading material?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q5" value="1">
+            <span>I read what interests me or comes recommended</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q5" value="2">
+            <span>I prefer obscure authors and first editions</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q5" value="3">
+            <span>I only read untranslated works in their original Medieval dialects</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q5" value="4">
+            <span>I exclusively read unpublished manuscripts that I discover in abandoned Parisian attics</span>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Reveal Your Pretentiousness Quotient</button>
+    </form>
+
+    <div class="result" id="quiz-result">
+      <h2>Your Pretentiousness Level:</h2>
+      <p id="result-text"></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('pretentiousness-quiz').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let score = 0;
+      const answers = new FormData(this);
+      
+      for (let value of answers.values()) {
+        score += parseInt(value);
+      }
+      
+      const resultText = document.getElementById('result-text');
+      const resultDiv = document.getElementById('quiz-result');
+      
+      let assessment;
+      if (score < 15) {
+        assessment = "Tragically Pedestrian: Your tastes are distressingly... accessible. Consider subscribing to our newsletter on cultivating manufactured sophistication.";
+      } else if (score < 25) {
+        assessment = "Emerging Elitist: You're developing a palate for pretension, but still occasionally enjoy things unironically. There's room for improvement.";
+      } else if (score < 35) {
+        assessment = "Distinguished Dilettante: Your ability to detect subtle notes of pretentiousness in everything is truly remarkable. You're well on your way to complete social insufferability.";
+      } else {
+        assessment = "Supreme Sophisticate: Your refined sensibilities are so acute that you find it physically painful to be in the presence of mass-market anything. Bravo!";
+      }
+      
+      resultText.textContent = assessment;
+      resultDiv.style.display = 'block';
+      resultDiv.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html> 
