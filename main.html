@@ -222,64 +222,16 @@
 
     .decorative-line {
       position: absolute;
-      width: 300px;
-      height: 300px;
+      width: 200px;
+      height: 3px;  /* Thinner lines */
       opacity: 0.4;
       filter: drop-shadow(0 0 5px #6a0dad)
               drop-shadow(0 0 10px #6a0dad)
               drop-shadow(0 0 15px #6a0dad);
       mix-blend-mode: screen;
       animation: floatAnimation 20s infinite ease-in-out;
-      transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       will-change: transform, opacity, top, left;
-    }
-
-    /* Default positions and animations */
-    #line1 {
-      top: 10%;
-      left: 5%;
-      transform: rotate(15deg) scale(1.5);
-      animation-delay: 0s;
-    }
-    
-    #line2 {
-      top: 40%;
-      right: 5%;
-      transform: rotate(-10deg) scale(1.8);
-      animation-delay: -7s;
-    }
-    
-    #line3 {
-      top: 60%;
-      left: 25%;
-      transform: rotate(5deg) scale(0.8);
-    }
-
-    /* Update the hover selectors */
-    .bonbon:first-child:hover .image-frame ~ #decorative-lines-container .decorative-line {
-      animation: none;
-      opacity: 0.6;
-    }
-
-    .bonbon:first-child .image-frame:hover ~ #decorative-lines-container #line1 {
-      top: calc(var(--bonbon-top) - 50px);
-      left: calc(var(--bonbon-left) - 50px);
-      transform: rotate(0) scale(1);
-      z-index: 100;
-    }
-
-    .bonbon:first-child .image-frame:hover ~ #decorative-lines-container #line2 {
-      top: calc(var(--bonbon-top) - 50px);
-      left: calc(var(--bonbon-left) + 250px);
-      transform: rotate(90deg) scale(1);
-      z-index: 100;
-    }
-
-    .bonbon:first-child .image-frame:hover ~ #decorative-lines-container #line3 {
-      top: calc(var(--bonbon-top) + 250px);
-      left: calc(var(--bonbon-left) - 50px);
-      transform: rotate(-90deg) scale(1);
-      z-index: 100;
     }
 
     @keyframes floatAnimation {
@@ -428,13 +380,16 @@
   
   <div id="decorative-lines-container">
     <svg class="decorative-line" id="line1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 10 190 Q 50 10, 190 150 T 150 50" stroke="#6a0dad" stroke-width="3" fill="none"/>
+      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
     </svg>
     <svg class="decorative-line" id="line2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 190 10 Q 150 190, 10 50 T 50 150" stroke="#6a0dad" stroke-width="3" fill="none"/>
+      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
     </svg>
     <svg class="decorative-line" id="line3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 50 10 Q 10 150, 150 190 T 190 50" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
+      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    </svg>
+    <svg class="decorative-line" id="line4" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
     </svg>
   </div>
 
@@ -556,66 +511,75 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const imageFrames = document.querySelectorAll('.image-frame');
-      const line1 = document.getElementById('line1');
-      const line2 = document.getElementById('line2');
-      const line3 = document.getElementById('line3');
-      const lines = [line1, line2, line3];
+      const lines = Array.from(document.querySelectorAll('.decorative-line'));
+      
+      // Store initial positions for reset
+      const initialStates = lines.map(line => ({
+        transform: getComputedStyle(line).transform,
+        top: getComputedStyle(line).top,
+        left: getComputedStyle(line).left
+      }));
 
-      // Store initial transforms from CSS to revert to
-      const initialTransforms = {
-        line1: getComputedStyle(line1).transform,
-        line2: getComputedStyle(line2).transform,
-        line3: getComputedStyle(line3).transform,
-      };
-      // Store initial top/left from CSS as well
-      const initialPositions = {
-        line1: { top: getComputedStyle(line1).top, left: getComputedStyle(line1).left },
-        line2: { top: getComputedStyle(line2).top, left: getComputedStyle(line2).left },
-        line3: { top: getComputedStyle(line3).top, left: getComputedStyle(line3).left },
+      // Set initial random positions
+      function setRandomPositions() {
+        lines.forEach((line, i) => {
+          line.style.top = `${Math.random() * 60 + 20}%`;
+          line.style.left = `${Math.random() * 60 + 20}%`;
+          line.style.transform = `rotate(${Math.random() * 360}deg) scale(1.5)`;
+        });
       }
+
+      setRandomPositions();
 
       imageFrames.forEach(frame => {
         frame.addEventListener('mouseenter', () => {
           const rect = frame.getBoundingClientRect();
-          const frameCenterX = rect.left + rect.width / 2;
-          const frameCenterY = rect.top + rect.height / 2;
-          
-          // Line 1 - Position above the frame
-          // Adjust offsetX/Y to position the line's center relative to the SVG's own size (200x200)
-          const line1OffsetX = line1.offsetWidth / 2;
-          const line1OffsetY = line1.offsetHeight / 2;
-          line1.style.top = `${rect.top - line1OffsetY - 10}px`; // 10px buffer
-          line1.style.left = `${frameCenterX - line1OffsetX}px`;
-          line1.style.transform = 'rotate(0deg) scale(0.7)';
+          const buffer = 10; // Distance from frame edge
 
-          // Line 2 - Position to the left of the frame
-          const line2OffsetX = line2.offsetWidth / 2;
-          const line2OffsetY = line2.offsetHeight / 2;
-          line2.style.top = `${frameCenterY - line2OffsetY}px`;
-          line2.style.left = `${rect.left - line2OffsetX - 10}px`; // 10px buffer
-          line2.style.transform = 'rotate(90deg) scale(0.7)';
+          // Stop any ongoing animations
+          lines.forEach(line => {
+            line.style.animation = 'none';
+          });
 
-          // Line 3 - Position to the right of the frame
-          const line3OffsetX = line3.offsetWidth / 2;
-          const line3OffsetY = line3.offsetHeight / 2;
-          line3.style.top = `${frameCenterY - line3OffsetY}px`;
-          line3.style.left = `${rect.right - line3OffsetX + 10}px`; // 10px buffer
-          line3.style.transform = 'rotate(-90deg) scale(0.7)';
+          // Position lines around the frame
+          // Top
+          lines[0].style.top = `${rect.top - buffer}px`;
+          lines[0].style.left = `${rect.left - buffer}px`;
+          lines[0].style.width = `${rect.width + buffer * 2}px`;
+          lines[0].style.transform = 'rotate(0deg) scale(1)';
+
+          // Right
+          lines[1].style.top = `${rect.top - buffer}px`;
+          lines[1].style.left = `${rect.right + buffer}px`;
+          lines[1].style.height = `${rect.height + buffer * 2}px`;
+          lines[1].style.transform = 'rotate(90deg) scale(1)';
+
+          // Bottom
+          lines[2].style.top = `${rect.bottom + buffer}px`;
+          lines[2].style.left = `${rect.left - buffer}px`;
+          lines[2].style.width = `${rect.width + buffer * 2}px`;
+          lines[2].style.transform = 'rotate(0deg) scale(1)';
+
+          // Left
+          lines[3].style.top = `${rect.top - buffer}px`;
+          lines[3].style.left = `${rect.left - buffer}px`;
+          lines[3].style.height = `${rect.height + buffer * 2}px`;
+          lines[3].style.transform = 'rotate(90deg) scale(1)';
+
+          // Increase opacity on hover
+          lines.forEach(line => {
+            line.style.opacity = '0.8';
+          });
         });
 
         frame.addEventListener('mouseleave', () => {
-          // Revert to initial CSS positions and transforms
-          line1.style.top = initialPositions.line1.top;
-          line1.style.left = initialPositions.line1.left;
-          line1.style.transform = initialTransforms.line1;
-
-          line2.style.top = initialPositions.line2.top;
-          line2.style.left = initialPositions.line2.left;
-          line2.style.transform = initialTransforms.line2;
-
-          line3.style.top = initialPositions.line3.top;
-          line3.style.left = initialPositions.line3.left;
-          line3.style.transform = initialTransforms.line3;
+          // Reset to random positions with animation
+          lines.forEach((line, i) => {
+            line.style.animation = 'floatAnimation 20s infinite ease-in-out';
+            line.style.animationDelay = `${-i * 7}s`;
+            line.style.opacity = '0.4';
+          });
+          setRandomPositions();
         });
       });
     });
