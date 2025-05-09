@@ -223,15 +223,23 @@
     .decorative-line {
       position: absolute;
       width: 200px;
-      height: 3px;  /* Thinner lines */
+      height: 3px;
       opacity: 0.4;
       filter: drop-shadow(0 0 5px #6a0dad)
               drop-shadow(0 0 10px #6a0dad)
               drop-shadow(0 0 15px #6a0dad);
       mix-blend-mode: screen;
       animation: floatAnimation 20s infinite ease-in-out;
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: transform, opacity, top, left;
+      transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform, opacity, top, left, width, height;
+    }
+
+    .decorative-line path {
+      transition: all 1s ease-in-out;
+    }
+
+    .decorative-line:hover path {
+      d: path("M 0,5 C 50,0 150,10 200,5");
     }
 
     @keyframes floatAnimation {
@@ -251,6 +259,12 @@
         transform: translate(0, 0) rotate(0deg) scale(1.5);
       }
     }
+
+    /* Add initial positions for the lines */
+    #line1 { top: 20%; left: 20%; }
+    #line2 { top: 40%; left: 40%; }
+    #line3 { top: 60%; left: 30%; }
+    #line4 { top: 80%; left: 50%; }
 
     .about-section {
       padding: 8rem 2rem;
@@ -379,17 +393,21 @@
   <div class="bg"></div>
   
   <div id="decorative-lines-container">
-    <svg class="decorative-line" id="line1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    <svg class="decorative-line" id="line1" viewBox="0 0 200 10" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 0,5 C 50,0 150,10 200,5" stroke="#6a0dad" stroke-width="3" fill="none"/>
+      <path d="M 0,5 C 50,10 150,0 200,5" stroke="#6a0dad" stroke-width="2" fill="none" opacity="0.5"/>
     </svg>
-    <svg class="decorative-line" id="line2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    <svg class="decorative-line" id="line2" viewBox="0 0 10 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 5,0 C 0,50 10,150 5,200" stroke="#6a0dad" stroke-width="3" fill="none"/>
+      <path d="M 5,0 C 10,50 0,150 5,200" stroke="#6a0dad" stroke-width="2" fill="none" opacity="0.5"/>
     </svg>
-    <svg class="decorative-line" id="line3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    <svg class="decorative-line" id="line3" viewBox="0 0 200 10" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 0,5 C 50,10 150,0 200,5" stroke="#6a0dad" stroke-width="3" fill="none"/>
+      <path d="M 0,5 C 50,0 150,10 200,5" stroke="#6a0dad" stroke-width="2" fill="none" opacity="0.5"/>
     </svg>
-    <svg class="decorative-line" id="line4" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 0 0 L 200 0" stroke="#6a0dad" stroke-width="3" fill="none"/>
+    <svg class="decorative-line" id="line4" viewBox="0 0 10 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 5,0 C 10,50 0,150 5,200" stroke="#6a0dad" stroke-width="3" fill="none"/>
+      <path d="M 5,0 C 0,50 10,150 5,200" stroke="#6a0dad" stroke-width="2" fill="none" opacity="0.5"/>
     </svg>
   </div>
 
@@ -513,73 +531,72 @@
       const imageFrames = document.querySelectorAll('.image-frame');
       const lines = Array.from(document.querySelectorAll('.decorative-line'));
       
-      // Store initial positions for reset
-      const initialStates = lines.map(line => ({
-        transform: getComputedStyle(line).transform,
-        top: getComputedStyle(line).top,
-        left: getComputedStyle(line).left
-      }));
-
-      // Set initial random positions
-      function setRandomPositions() {
-        lines.forEach((line, i) => {
-          line.style.top = `${Math.random() * 60 + 20}%`;
-          line.style.left = `${Math.random() * 60 + 20}%`;
-          line.style.transform = `rotate(${Math.random() * 360}deg) scale(1.5)`;
-        });
+      function setRandomPosition(line) {
+        const randomTop = Math.random() * 60 + 20;
+        const randomLeft = Math.random() * 60 + 20;
+        const randomRotate = Math.random() * 360;
+        
+        line.style.top = `${randomTop}%`;
+        line.style.left = `${randomLeft}%`;
+        line.style.transform = `rotate(${randomRotate}deg) scale(1.5)`;
+        line.style.width = '200px';
+        line.style.height = '3px';
       }
 
-      setRandomPositions();
+      // Set initial positions
+      lines.forEach(setRandomPosition);
 
       imageFrames.forEach(frame => {
         frame.addEventListener('mouseenter', () => {
           const rect = frame.getBoundingClientRect();
-          const buffer = 10; // Distance from frame edge
+          const buffer = 10;
 
-          // Stop any ongoing animations
           lines.forEach(line => {
             line.style.animation = 'none';
+            line.style.opacity = '0.8';
           });
 
-          // Position lines around the frame
-          // Top
+          // Top line
           lines[0].style.top = `${rect.top - buffer}px`;
           lines[0].style.left = `${rect.left - buffer}px`;
           lines[0].style.width = `${rect.width + buffer * 2}px`;
+          lines[0].style.height = '3px';
           lines[0].style.transform = 'rotate(0deg) scale(1)';
 
-          // Right
+          // Right line
           lines[1].style.top = `${rect.top - buffer}px`;
           lines[1].style.left = `${rect.right + buffer}px`;
+          lines[1].style.width = '3px';
           lines[1].style.height = `${rect.height + buffer * 2}px`;
-          lines[1].style.transform = 'rotate(90deg) scale(1)';
+          lines[1].style.transform = 'rotate(0deg) scale(1)';
 
-          // Bottom
+          // Bottom line
           lines[2].style.top = `${rect.bottom + buffer}px`;
           lines[2].style.left = `${rect.left - buffer}px`;
           lines[2].style.width = `${rect.width + buffer * 2}px`;
+          lines[2].style.height = '3px';
           lines[2].style.transform = 'rotate(0deg) scale(1)';
 
-          // Left
+          // Left line
           lines[3].style.top = `${rect.top - buffer}px`;
           lines[3].style.left = `${rect.left - buffer}px`;
+          lines[3].style.width = '3px';
           lines[3].style.height = `${rect.height + buffer * 2}px`;
-          lines[3].style.transform = 'rotate(90deg) scale(1)';
-
-          // Increase opacity on hover
-          lines.forEach(line => {
-            line.style.opacity = '0.8';
-          });
+          lines[3].style.transform = 'rotate(0deg) scale(1)';
         });
 
         frame.addEventListener('mouseleave', () => {
-          // Reset to random positions with animation
           lines.forEach((line, i) => {
-            line.style.animation = 'floatAnimation 20s infinite ease-in-out';
-            line.style.animationDelay = `${-i * 7}s`;
+            // Start floating animation after the transition
+            setTimeout(() => {
+              line.style.animation = 'floatAnimation 20s infinite ease-in-out';
+              line.style.animationDelay = `${-i * 5}s`;
+            }, 2000);
+            
+            // Set random position with slow transition
+            setRandomPosition(line);
             line.style.opacity = '0.4';
           });
-          setRandomPositions();
         });
       });
     });
