@@ -250,10 +250,9 @@
     }
     
     #line3 {
-      bottom: 10%;
-      left: 15%;
-      transform: rotate(5deg) scale(1.3);
-      animation-delay: -14s;
+      top: 60%;
+      left: 25%;
+      transform: rotate(5deg) scale(0.8);
     }
 
     /* Update the hover selectors */
@@ -435,7 +434,7 @@
       <path d="M 190 10 Q 150 190, 10 50 T 50 150" stroke="#6a0dad" stroke-width="3" fill="none"/>
     </svg>
     <svg class="decorative-line" id="line3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 50 10 Q 10 150, 150 190 T 190 50" stroke="#6a0dad" stroke-width="3" fill="none"/>
+      <path d="M 50 10 Q 10 150, 150 190 T 190 50" stroke="rgba(106, 13, 173, 0.7)" stroke-width="2" fill="none"/>
     </svg>
   </div>
 
@@ -555,20 +554,70 @@
   </section>
 
   <script>
-    // Add this after your existing script
-    document.addEventListener('DOMContentLoaded', function() {
-      const firstBonbon = document.querySelector('.bonbon:first-child');
-      
-      function updateBonbonPosition() {
-        const rect = firstBonbon.getBoundingClientRect();
-        document.documentElement.style.setProperty('--bonbon-top', `${rect.top}px`);
-        document.documentElement.style.setProperty('--bonbon-left', `${rect.left}px`);
+    document.addEventListener('DOMContentLoaded', () => {
+      const imageFrames = document.querySelectorAll('.image-frame');
+      const line1 = document.getElementById('line1');
+      const line2 = document.getElementById('line2');
+      const line3 = document.getElementById('line3');
+      const lines = [line1, line2, line3];
+
+      // Store initial transforms from CSS to revert to
+      const initialTransforms = {
+        line1: getComputedStyle(line1).transform,
+        line2: getComputedStyle(line2).transform,
+        line3: getComputedStyle(line3).transform,
+      };
+      // Store initial top/left from CSS as well
+      const initialPositions = {
+        line1: { top: getComputedStyle(line1).top, left: getComputedStyle(line1).left },
+        line2: { top: getComputedStyle(line2).top, left: getComputedStyle(line2).left },
+        line3: { top: getComputedStyle(line3).top, left: getComputedStyle(line3).left },
       }
 
-      // Update position on load and resize
-      updateBonbonPosition();
-      window.addEventListener('resize', updateBonbonPosition);
-      window.addEventListener('scroll', updateBonbonPosition);
+      imageFrames.forEach(frame => {
+        frame.addEventListener('mouseenter', () => {
+          const rect = frame.getBoundingClientRect();
+          const frameCenterX = rect.left + rect.width / 2;
+          const frameCenterY = rect.top + rect.height / 2;
+          
+          // Line 1 - Position above the frame
+          // Adjust offsetX/Y to position the line's center relative to the SVG's own size (200x200)
+          const line1OffsetX = line1.offsetWidth / 2;
+          const line1OffsetY = line1.offsetHeight / 2;
+          line1.style.top = `${rect.top - line1OffsetY - 10}px`; // 10px buffer
+          line1.style.left = `${frameCenterX - line1OffsetX}px`;
+          line1.style.transform = 'rotate(0deg) scale(0.7)';
+
+          // Line 2 - Position to the left of the frame
+          const line2OffsetX = line2.offsetWidth / 2;
+          const line2OffsetY = line2.offsetHeight / 2;
+          line2.style.top = `${frameCenterY - line2OffsetY}px`;
+          line2.style.left = `${rect.left - line2OffsetX - 10}px`; // 10px buffer
+          line2.style.transform = 'rotate(90deg) scale(0.7)';
+
+          // Line 3 - Position to the right of the frame
+          const line3OffsetX = line3.offsetWidth / 2;
+          const line3OffsetY = line3.offsetHeight / 2;
+          line3.style.top = `${frameCenterY - line3OffsetY}px`;
+          line3.style.left = `${rect.right - line3OffsetX + 10}px`; // 10px buffer
+          line3.style.transform = 'rotate(-90deg) scale(0.7)';
+        });
+
+        frame.addEventListener('mouseleave', () => {
+          // Revert to initial CSS positions and transforms
+          line1.style.top = initialPositions.line1.top;
+          line1.style.left = initialPositions.line1.left;
+          line1.style.transform = initialTransforms.line1;
+
+          line2.style.top = initialPositions.line2.top;
+          line2.style.left = initialPositions.line2.left;
+          line2.style.transform = initialTransforms.line2;
+
+          line3.style.top = initialPositions.line3.top;
+          line3.style.left = initialPositions.line3.left;
+          line3.style.transform = initialTransforms.line3;
+        });
+      });
     });
   </script>
 </body>
