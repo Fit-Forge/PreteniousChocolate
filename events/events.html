@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curated Tasting Experiences | Pretentious Chocolates</title>
+  <style>
+    body {
+      background: #000;
+      color: #d4af37;
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .events-container {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-style: italic;
+      font-size: 1.4rem;
+      margin-bottom: 4rem;
+      opacity: 0.8;
+    }
+
+    .event-card {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 2rem;
+      margin-bottom: 3rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-card:hover {
+      border-color: rgba(212, 175, 55, 0.8);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(212, 175, 55, 0.1);
+    }
+
+    .event-date {
+      font-size: 1.2rem;
+      color: #f0e68c;
+      margin-bottom: 1rem;
+    }
+
+    .event-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .event-description {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .event-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .detail {
+      text-align: center;
+    }
+
+    .detail-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+      color: #f0e68c;
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+    }
+
+    .register-btn {
+      background: transparent;
+      color: #d4af37;
+      border: 2px solid #d4af37;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Cormorant Garamond', serif;
+      display: block;
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    .register-btn:hover {
+      background: rgba(212, 175, 55, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .exclusivity-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(212, 175, 55, 0.9);
+      color: black;
+      padding: 0.5rem 1rem;
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
+    .waitlist-note {
+      text-align: center;
+      font-style: italic;
+      margin-top: 1rem;
+      color: #f0e68c;
+    }
+  </style>
+</head>
+<body>
+  <div class="events-container">
+    <h1>Curated Tasting Experiences</h1>
+    <div class="subtitle">Where chocolate transcends mere confectionery to become performance art</div>
+
+    <div class="event-card">
+      <div class="exclusivity-badge">By Invitation Only</div>
+      <div class="event-date">Full Moon, December 2024</div>
+      <h2 class="event-title">The Midnight Degustation</h2>
+      <p class="event-description">A nocturnal journey through our most enigmatic creations, conducted in complete darkness and accompanied by a live theremin performance. Each chocolate is presented at precisely the temperature at which its molecular structure achieves perfect resonance with the lunar cycle.</p>
+      <div class="event-details">
+        <div class="detail">
+          <div class="detail-label">Duration</div>
+          <div class="detail-value">4 Hours of Enlightenment</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Location</div>
+          <div class="detail-value">An Undisclosed Gothic Chapel</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Attire</div>
+          <div class="detail-value">Formal Victorian Mourning Dress</div>
+        </div>
+      </div>
+      <button class="register-btn">Request Consideration</button>
+      <div class="waitlist-note">Current waitlist: 2.5 years</div>
+    </div>
+
+    <div class="event-card">
+      <div class="exclusivity-badge">Limited to 7 Guests</div>
+      <div class="event-date">Winter Solstice, 2024</div>
+      <h2 class="event-title">L'Expérience Synesthésique</h2>
+      <p class="event-description">An avant-garde tasting where each chocolate corresponds to a specific emotion, color, and musical note. Guests will be guided through a series of sensory deprivation exercises before each tasting, ensuring their palates are emotionally prepared for the intensity of the experience.</p>
+      <div class="event-details">
+        <div class="detail">
+          <div class="detail-label">Duration</div>
+          <div class="detail-value">One Emotional Epoch</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Location</div>
+          <div class="detail-value">A Converted Observatory</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Prerequisites</div>
+          <div class="detail-value">Advanced Aura Reading</div>
+        </div>
+      </div>
+      <button class="register-btn">Submit Spiritual Resume</button>
+    </div>
+
+    <div class="event-card">
+      <div class="exclusivity-badge">Hereditary Access Only</div>
+      <div class="event-date">Spring Equinox, 2025</div>
+      <h2 class="event-title">The Heritage Collection Unveiling</h2>
+      <p class="event-description">A once-in-a-generation revelation of our most guarded recipes, featuring chocolates aged in century-old cognac barrels and infused with spices hand-harvested from extinct volcano calderas. Each piece is presented on a slice of meteorite and must be consumed while reciting ancient Mayan cacao prayers.</p>
+      <div class="event-details">
+        <div class="detail">
+          <div class="detail-label">Duration</div>
+          <div class="detail-value">Until The Last Echo Fades</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Location</div>
+          <div class="detail-value">A Private Island Time Forgot</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Verification Required</div>
+          <div class="detail-value">Family Crest & DNA Test</div>
+        </div>
+      </div>
+      <button class="register-btn">Prove Your Lineage</button>
+    </div>
+
+    <div class="event-card">
+      <div class="exclusivity-badge">Philosophers Only</div>
+      <div class="event-date">Autumnal Equinox, 2024</div>
+      <h2 class="event-title">Le Symposium du Cacao</h2>
+      <p class="event-description">A metaphysical exploration of chocolate's role in the collective unconscious. Each course is paired with an existential crisis and accompanied by a reading from Proust's lost chocolate journals. Participants must defend their worthiness to taste each piece through rigorous philosophical debate.</p>
+      <div class="event-details">
+        <div class="detail">
+          <div class="detail-label">Duration</div>
+          <div class="detail-value">Time Is But A Construct</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Location</div>
+          <div class="detail-value">Nietzsche's Former Study</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Required Reading</div>
+          <div class="detail-value">17th Century Treatises on Cacao</div>
+        </div>
+      </div>
+      <button class="register-btn">Submit Philosophical Thesis</button>
+      <div class="waitlist-note">Acceptance rate: 0.03%</div>
+    </div>
+
+    <div class="event-card">
+      <div class="exclusivity-badge">Once Per Century</div>
+      <div class="event-date">Total Solar Eclipse, 2024</div>
+      <h2 class="event-title">The Celestial Alignment</h2>
+      <p class="event-description">A transcendent tasting that occurs only when specific constellations align with our secret cacao grove. Our rarest creation, aged for 50 years in a zero-gravity chamber, will be revealed. Each guest receives their personal chocolate horoscope from our resident astrology-chocolatier.</p>
+      <div class="event-details">
+        <div class="detail">
+          <div class="detail-label">Duration</div>
+          <div class="detail-value">Until Mercury Exits Retrograde</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Location</div>
+          <div class="detail-value">A Levitating Glass Pyramid</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Entry Requirements</div>
+          <div class="detail-value">Certified Planetary Alignment</div>
+        </div>
+      </div>
+      <button class="register-btn">Consult The Stars</button>
+      <div class="waitlist-note">Next available event: 2124</div>
+    </div>
+  </div>
+</body>
+</html> 
