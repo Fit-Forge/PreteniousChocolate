@@ -46,8 +46,8 @@
 
     header h1:hover {
       text-shadow: 0 0 5px rgba(106, 13, 173, 0.7),
-                   0 0 10px rgba(106, 13, 173, 0.5),
-                   0 0 15px rgba(106, 13, 173, 0.3),
+                   0 0 15px rgba(106, 13, 173, 0.5),
+                   0 0 25px rgba(106, 13, 173, 0.3),
                    0 0 20px rgba(0,0,0,0.8);
     }
 
@@ -413,6 +413,27 @@
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
     }
+
+    /* Basic navigation link styling */
+    nav {
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    nav a {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+      text-decoration: none;
+      margin: 0 1.5rem;
+      font-size: 1.2rem;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #fff;
+      text-shadow: 0 0 8px rgba(212, 175, 55, 0.7);
+    }
   </style>
 </head>
 <body>
@@ -441,6 +462,10 @@
     <header>
       <h1>Our Curated Collection</h1>
       <div class="subtitle">Each piece, a masterpiece of confectionery artistry</div>
+      <nav>
+        <a href="main.html">Our Collection</a>
+        <a href="atelier.html">The Atelier</a>
+      </nav>
     </header>
 
     <div class="gallery">
