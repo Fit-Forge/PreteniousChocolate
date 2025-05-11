@@ -321,6 +321,31 @@ const bonbonAnalyzer = {
         preview.style.transform = 'scale(1.2) rotate(180deg)';
         preview.style.filter = 'brightness(1.5)';
         
+        // Create a dramatic flash effect
+        const flash = document.createElement('div');
+        flash.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(flash);
+
+        // Flash sequence
+        setTimeout(() => {
+            flash.style.opacity = '0.5';
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                setTimeout(() => flash.remove(), 300);
+            }, 100);
+        }, 0);
+
         setTimeout(() => {
             preview.style.transform = 'scale(1) rotate(360deg)';
             preview.style.filter = 'brightness(1)';
@@ -337,7 +362,29 @@ const bonbonAnalyzer = {
             }, burst * 1000);
         }
 
-        return this.generateReading();
+        // Get the reading
+        const reading = this.generateReading();
+
+        // Dramatic reveal of the text
+        personalityReveal.style.display = 'block';
+        personalityReveal.innerHTML = '';
+        
+        // Split the reading into characters for dramatic typing effect
+        const chars = reading.split('');
+        chars.forEach((char, index) => {
+            setTimeout(() => {
+                personalityReveal.innerHTML += char;
+                if (index === chars.length - 1) {
+                    // Add final flourish
+                    personalityReveal.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        personalityReveal.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            }, index * 20); // Adjust typing speed here
+        });
+
+        return reading;
     }
 };
 
