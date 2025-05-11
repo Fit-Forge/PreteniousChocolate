@@ -88,12 +88,12 @@
             width: 200px;
             height: 200px;
             border: 2px solid #d4af37;
-            border-radius: 50%;
             margin-bottom: 2rem;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             transition: all 0.5s ease, transform 1s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            background-size: 200% 200% !important;
         }
 
         .bonbon-preview:hover {
@@ -280,6 +280,59 @@
         nav a:hover {
             color: #fff;
             text-shadow: 0 0 8px rgba(212, 175, 55, 0.7);
+        }
+
+        /* Add after existing animations */
+        @keyframes purpleShimmer {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+        }
+
+        @keyframes emeraldGlow {
+            0%, 100% { background-position: 0% 0%; filter: brightness(1); }
+            50% { background-position: 100% 100%; filter: brightness(1.3); }
+        }
+
+        @keyframes rubyPulse {
+            0%, 100% { background-position: 0% 0%; transform: scale(1); }
+            50% { background-position: 100% 100%; transform: scale(1.05); }
+        }
+
+        @keyframes azureWave {
+            0% { background-position: 0% 0%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        @keyframes goldLuster {
+            0%, 100% { background-position: 0% 0%; filter: brightness(1); }
+            25% { background-position: 100% 0%; filter: brightness(1.2); }
+            50% { background-position: 100% 100%; filter: brightness(1.4); }
+            75% { background-position: 0% 100%; filter: brightness(1.2); }
+        }
+
+        @keyframes obsidianRipple {
+            0%, 100% { background-position: center; filter: brightness(0.8); }
+            50% { background-position: 100% 100%; filter: brightness(1.2); }
+        }
+
+        /* Add these new animations */
+        @keyframes pulseScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes moonGlow {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+            }
         }
     </style>
 </head>
