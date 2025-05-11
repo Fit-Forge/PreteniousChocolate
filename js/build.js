@@ -67,12 +67,43 @@ const bonbonAnalyzer = {
         "lotus-jasmine-shimmer": "The wellness influencer has entered the chat. Your meditation app subscription is more expensive than your therapy.",
         "moon-lavender-crystal": "Ah yes, the nocturnal aesthete. You've definitely hosted a midnight tea ceremony during a full moon.",
         "pyramid-saffron-gold": "Your apartment is filled with 'authentic' artifacts from countries you've never visited.",
-        "heart-cherry-ruby": "The hopeless romantic who writes poetry in a leather-bound journal, but only in coffee shops where people can see you."
+        "heart-cherry-ruby": "The hopeless romantic who writes poetry in a leather-bound journal, but only in coffee shops where people can see you.",
+        "dark-obsidian-matte": "The void gazes back. Your commitment to darkness extends beyond aesthetics into a lifestyle choice that would make Edgar Allan Poe suggest 'lightening up a bit.'",
+        "white-azure-crystal": "Ah, minimalism as maximalism. You've transcended the mere appreciation of white space into fetishizing it.",
+        "gold-purple-shimmer": "Your dedication to opulence would make Marie Antoinette whisper 'perhaps that's a bit much.'",
+        "skull-ruby-crystal": "The gothic romantic meets the baroque. You probably write poetry about bleeding roses while sipping wine from a crystal skull.",
+        "dragon-emerald-shimmer": "Fantasy meets luxury. You've named your houseplants after ancient deities and speak to them in constructed languages.",
+        "gem-azure-platinum": "Geometry as destiny. You arrange your books by crystal resonance frequency rather than alphabetically.",
+        "lotus-purple-shimmer": "The spiritual materialist emerges. Your meditation cushion costs more than most people's furniture.",
+        "pyramid-gold-crystal": "Ancient wisdom meets modern excess. You've definitely claimed to have had a past life as an Egyptian royal.",
+        "heart-ruby-platinum": "Romance as performance art. Your love letters are written in calligraphy on paper you've aged with tea stains.",
+        "moon-obsidian-crystal": "Nocturnal sophistication incarnate. You only host dinner parties during lunar eclipses.",
+        "lavender-crystal-gold": "Botanical elegance personified. You've developed strong opinions about the correct angle for holding a teacup.",
+        "rose-shimmer-white": "Floral decadence embodied. Your garden grows only flowers that were popular in Victorian poetry.",
+        "absinthe-platinum-dark": "The depths of refined debauchery. Your bar cart is arranged by 'emotional resonance' rather than spirit type.",
+        "mead-crystal-gold": "Medieval luxury reborn. You've attempted to start a renaissance in your local coffee shop.",
+        "jasmine-shimmer-white": "Eastern aesthetics through a Western lens. You correct people's pronunciation of 'gaiwan' unprompted.",
+        "cardamom-crystal-gold": "Spice route sophistication. Your spice cabinet is organized by historical trade route significance.",
+        "saffron-platinum-gold": "Precious indulgence personified. You've been known to lecture on the sociopolitical implications of spice trading.",
+        "fig-crystal-dark": "Mediterranean mystique distilled. You've written a manifesto on the cultural significance of dried fruits.",
+        "yuzu-shimmer-white": "Cross-cultural culinary pretension. You own three different types of matcha whisks and have named them all.",
+        "cherry-crystal-dark": "Classical refinement reimagined. You pair your chocolates with specific movements from baroque symphonies.",
+        "moon-lavender-crystal": "Ah yes, the nocturnal aesthete. You've definitely hosted a midnight tea ceremony during a full moon.",
+        "skull-absinthe-platinum": "The tortured artist emerges. Your bonbon choice reveals a soul that yearns to be understood, yet paradoxically revels in being misunderstood.",
+        "dragon-saffron-gold": "The maximalist emerges. You don't just want to make a statement, you want to write an entire manifesto in precious metals.",
+        "lotus-jasmine-shimmer": "The wellness influencer has entered the chat. Your meditation app subscription is more expensive than your therapy.",
+        "pyramid-cardamom-crystal": "The spice archaeologist reveals themselves. You've created a detailed timeline of historical spice trade routes and their impact on contemporary coffee culture.",
+        "heart-rose-platinum": "The romantic philosopher appears. Your love letters are written in archaic French and sealed with wax made from rare Himalayan beeswax.",
+        "gem-yuzu-crystal": "The fusion aesthete manifests. Your tea collection is arranged by geographical elevation of origin.",
+        "sphere-fig-gold": "The geometric gourmand arrives. You've developed a theory about the golden ratio in dried fruit arrangements."
     },
 
     // Generate visual preview
     updatePreview(type, value) {
         const preview = document.querySelector('.bonbon-preview');
+        
+        // Reset animations
+        preview.style.animation = 'none';
         
         // Update the visual representation based on selections
         switch(type) {
@@ -80,7 +111,7 @@ const bonbonAnalyzer = {
                 preview.style.backgroundColor = this.getShellColor(value);
                 break;
             case 'color':
-                preview.style.backgroundColor = this.getColor(value);
+                this.getColor(value);
                 break;
             case 'shape':
                 preview.style.borderRadius = this.getShape(value);
@@ -124,28 +155,108 @@ const bonbonAnalyzer = {
 
     getColor(value) {
         const colors = {
-            purple: '#663399',
-            emerald: '#50C878',
-            ruby: '#E0115F',
-            azure: '#007FFF',
-            gold: '#FFD700',
-            obsidian: '#1B1B1B'
+            purple: {
+                base: '#663399',
+                gradient: 'linear-gradient(45deg, #663399, #9370DB, #663399)',
+                animation: 'purpleShimmer 3s infinite'
+            },
+            emerald: {
+                base: '#50C878',
+                gradient: 'linear-gradient(45deg, #50C878, #3CB371, #50C878)',
+                animation: 'emeraldGlow 3s infinite'
+            },
+            ruby: {
+                base: '#E0115F',
+                gradient: 'linear-gradient(45deg, #E0115F, #FF0000, #E0115F)',
+                animation: 'rubyPulse 3s infinite'
+            },
+            azure: {
+                base: '#007FFF',
+                gradient: 'linear-gradient(45deg, #007FFF, #87CEEB, #007FFF)',
+                animation: 'azureWave 3s infinite'
+            },
+            gold: {
+                base: '#FFD700',
+                gradient: 'linear-gradient(45deg, #FFD700, #DAA520, #FFD700)',
+                animation: 'goldLuster 3s infinite'
+            },
+            obsidian: {
+                base: '#1B1B1B',
+                gradient: 'linear-gradient(45deg, #1B1B1B, #2F4F4F, #1B1B1B)',
+                animation: 'obsidianRipple 3s infinite'
+            }
         };
-        return colors[value] || '#2c1810';
+        
+        const preview = document.querySelector('.bonbon-preview');
+        const colorData = colors[value] || { base: '#2c1810', gradient: 'none', animation: 'none' };
+        
+        preview.style.background = colorData.gradient;
+        preview.style.animation = `${colorData.animation}, ${preview.style.animation || 'none'}`.replace('none, ', '');
+        
+        return colorData.base;
     },
 
     getShape(value) {
         const shapes = {
-            sphere: '50%',
-            skull: '30% 30% 50% 50% / 75% 75% 25% 25%',
-            dragon: '63% 37% 37% 63% / 43% 37% 63% 57%',
-            gem: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
-            lotus: '50% 50% 50% 50% / 60% 60% 40% 40%',
-            pyramid: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-            heart: 'path("M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 6-5.191 2.389 0 4.928 1.311 6 4.311 1.072-3 3.611-4.311 6-4.311 2.932 0 6 1.4 6 5.191 0 4.105-5.37 8.863-11 14.402z")',
-            moon: '70% 70% 30% 30% / 50% 50% 50% 50%'
+            sphere: {
+                borderRadius: '50%',
+                clipPath: 'none'
+            },
+            skull: {
+                borderRadius: '0',
+                clipPath: 'path("M50 5C25 5 5 25 5 50C5 75 25 95 50 95C75 95 95 75 95 50C95 25 75 5 50 5ZM30 40C30 35 35 30 40 30C45 30 50 35 50 40C50 45 45 50 40 50C35 50 30 45 30 40ZM70 40C70 35 65 30 60 30C55 30 50 35 50 40C50 45 55 50 60 50C65 50 70 45 70 40ZM25 65C25 65 35 80 50 80C65 80 75 65 75 65C75 65 65 70 50 70C35 70 25 65 25 65Z")'
+            },
+            dragon: {
+                borderRadius: '0',
+                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            },
+            gem: {
+                borderRadius: '0',
+                clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)'
+            },
+            lotus: {
+                borderRadius: '0',
+                clipPath: 'path("M50 0C60 40 90 50 90 70C90 85 75 95 50 95C25 95 10 85 10 70C10 50 40 40 50 0")'
+            },
+            pyramid: {
+                borderRadius: '0',
+                clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)'
+            },
+            heart: {
+                borderRadius: '0',
+                clipPath: 'path("M50 15C45 5 20 5 20 25C20 45 50 75 50 75C50 75 80 45 80 25C80 5 55 5 50 15")'
+            },
+            moon: {
+                borderRadius: '0',
+                clipPath: 'path("M50 0C22.4 0 0 22.4 0 50C0 77.6 22.4 100 50 100C77.6 100 100 77.6 100 50C100 22.4 77.6 0 50 0ZM50 90C27.9 90 10 72.1 10 50C10 27.9 27.9 10 50 10C72.1 10 90 27.9 90 50C90 72.1 72.1 90 50 90Z")'
+            }
         };
-        return shapes[value] || '50%';
+
+        const preview = document.querySelector('.bonbon-preview');
+        const shapeData = shapes[value] || shapes.sphere;
+
+        preview.style.borderRadius = shapeData.borderRadius;
+        preview.style.clipPath = shapeData.clipPath;
+
+        // Add shape-specific animations
+        switch(value) {
+            case 'dragon':
+                preview.style.animation = 'rotatePreview 6s infinite ease-in-out';
+                break;
+            case 'gem':
+                preview.style.animation = 'rotatePreview 4s infinite ease-in-out';
+                break;
+            case 'lotus':
+                preview.style.animation = 'pulseScale 3s infinite ease-in-out';
+                break;
+            case 'moon':
+                preview.style.animation = 'moonGlow 4s infinite ease-in-out';
+                break;
+            default:
+                preview.style.animation = 'none';
+        }
+
+        return shapeData.borderRadius;
     },
 
     getFinish(value) {
