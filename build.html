@@ -135,6 +135,21 @@
             margin-top: 2rem;
             position: relative;
             overflow: hidden;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            background: linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.9) 0%,
+                rgba(20, 20, 20, 0.9) 100%
+            );
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+            padding: 3rem;
+            border-radius: 15px;
+            max-width: 800px;
+            margin: 2rem auto;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
         }
 
         .personality-reveal::before {
@@ -145,7 +160,21 @@
             width: 200%;
             height: 200%;
             background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
-            animation: rotateGlow 10s infinite linear;
+            animation: rotateGlow 15s infinite linear;
+            opacity: 0.3;
+        }
+
+        .personality-reveal::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: inherit;
+            pointer-events: none;
+            animation: borderGlow 4s infinite ease-in-out;
         }
 
         .reveal-button {
@@ -334,6 +363,92 @@
                 box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
             }
         }
+
+        /* Add these styles for the color option buttons */
+        [data-type="color"] {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-width: 2px !important;
+        }
+
+        [data-type="color"]::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            z-index: 0;
+            transition: all 0.3s ease;
+        }
+
+        [data-type="color"] span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Color-specific styles */
+        [data-value="purple"]::before {
+            background: linear-gradient(45deg, #663399, #9370DB);
+        }
+
+        [data-value="emerald"]::before {
+            background: linear-gradient(45deg, #50C878, #3CB371);
+        }
+
+        [data-value="ruby"]::before {
+            background: linear-gradient(45deg, #E0115F, #FF0000);
+        }
+
+        [data-value="azure"]::before {
+            background: linear-gradient(45deg, #007FFF, #87CEEB);
+        }
+
+        [data-value="gold"]::before {
+            background: linear-gradient(45deg, #FFD700, #DAA520);
+        }
+
+        [data-value="obsidian"]::before {
+            background: linear-gradient(45deg, #1B1B1B, #2F4F4F);
+        }
+
+        /* Hover effects */
+        [data-type="color"]:hover::before {
+            opacity: 0.6;
+        }
+
+        [data-type="color"]:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Selected state */
+        [data-type="color"].selected::before {
+            opacity: 0.8;
+        }
+
+        [data-type="color"].selected {
+            border-color: #d4af37 !important;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Animation for color selection */
+        @keyframes colorPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        [data-type="color"].selected {
+            animation: colorPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(212, 175, 55, 0.3); }
+            50% { border-color: rgba(212, 175, 55, 0.6); }
+        }
     </style>
 </head>
 <body>
@@ -364,12 +479,24 @@
                 <div class="option-group">
                     <h3>Select Your Color</h3>
                     <div class="option-list">
-                        <button class="option-button" data-type="color" data-value="purple">Royal Purple</button>
-                        <button class="option-button" data-type="color" data-value="emerald">Mystic Emerald</button>
-                        <button class="option-button" data-type="color" data-value="ruby">Blood Ruby</button>
-                        <button class="option-button" data-type="color" data-value="azure">Celestial Azure</button>
-                        <button class="option-button" data-type="color" data-value="gold">Philosopher's Gold</button>
-                        <button class="option-button" data-type="color" data-value="obsidian">Midnight Obsidian</button>
+                        <button class="option-button" data-type="color" data-value="purple">
+                            <span>Royal Purple</span>
+                        </button>
+                        <button class="option-button" data-type="color" data-value="emerald">
+                            <span>Mystic Emerald</span>
+                        </button>
+                        <button class="option-button" data-type="color" data-value="ruby">
+                            <span>Blood Ruby</span>
+                        </button>
+                        <button class="option-button" data-type="color" data-value="azure">
+                            <span>Celestial Azure</span>
+                        </button>
+                        <button class="option-button" data-type="color" data-value="gold">
+                            <span>Philosopher's Gold</span>
+                        </button>
+                        <button class="option-button" data-type="color" data-value="obsidian">
+                            <span>Midnight Obsidian</span>
+                        </button>
                     </div>
                 </div>
 
