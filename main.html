@@ -654,6 +654,52 @@
     .bonbon[data-type="velvet-noir"] .image-frame:hover .reflection {
         opacity: 1;
     }
+
+    .image-carousel {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .image-carousel img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .image-carousel img.active {
+        opacity: 1;
+    }
+
+    .image-dots {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 3;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(212, 175, 55, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .dot.active {
+        background: rgba(212, 175, 55, 0.8);
+        transform: scale(1.2);
+    }
+
+    .dot:hover {
+        background: rgba(212, 175, 55, 0.6);
+    }
   </style>
 </head>
 <body>
@@ -691,7 +737,18 @@
     <div class="gallery">
       <div class="bonbon" data-type="velvet-noir">
         <div class="image-frame">
-          <img src="images/velvet-noir.jpg" alt="Velvet Noir - A study in darkness and light">
+          <div class="image-carousel">
+            <img src="image/Coffee (1).jpeg" alt="Velvet Noir - Front view" class="active">
+            <img src="image/Coffee (2).jpeg" alt="Velvet Noir - Side view">
+            <img src="image/Coffee (3).jpeg" alt="Velvet Noir - Angled view">
+            <img src="image/Coffee (4).jpeg" alt="Velvet Noir - Detail view">
+          </div>
+          <div class="image-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+            <span class="dot" data-index="3"></span>
+          </div>
           <div class="meridian"></div>
           <div class="reflection"></div>
           <div class="tasting-note">
@@ -1005,6 +1062,47 @@
         window.currentCaptcha = captchaQuestions[randomIndex];
         captchaQuestion.textContent = currentCaptcha.question;
     }
+
+    // Image carousel functionality
+    document.querySelectorAll('.image-dots .dot').forEach(dot => {
+        dot.addEventListener('click', () => {
+            const index = dot.dataset.index;
+            const carousel = dot.closest('.image-frame').querySelector('.image-carousel');
+            const dots = dot.closest('.image-dots').querySelectorAll('.dot');
+            
+            // Update images
+            carousel.querySelectorAll('img').forEach(img => img.classList.remove('active'));
+            carousel.querySelector(`img:nth-child(${parseInt(index) + 1})`).classList.add('active');
+            
+            // Update dots
+            dots.forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+        });
+    });
+
+    // Auto-rotate images on hover
+    document.querySelectorAll('.image-frame').forEach(frame => {
+        let rotationInterval;
+        
+        frame.addEventListener('mouseenter', () => {
+            rotationInterval = setInterval(() => {
+                const carousel = frame.querySelector('.image-carousel');
+                const dots = frame.querySelectorAll('.dot');
+                const currentIndex = Array.from(dots).findIndex(dot => dot.classList.contains('active'));
+                const nextIndex = (currentIndex + 1) % dots.length;
+                
+                // Trigger click on next dot
+                dots[nextIndex].click();
+            }, 2000);
+        });
+
+        frame.addEventListener('mouseleave', () => {
+            clearInterval(rotationInterval);
+            // Reset to first image
+            const firstDot = frame.querySelector('.dot[data-index="0"]');
+            firstDot.click();
+        });
+    });
   </script>
   <script src="js/analytics.js"></script>
 </body>
