@@ -746,6 +746,40 @@
     .bonbon[data-type="viridian-fairy"]:hover .bonbon-name {
         text-shadow: 0 0 10px rgba(144, 238, 144, 0.5);
     }
+
+    /* Add these styles for Sunlit Envy's specific effects */
+    .bonbon[data-type="sunlit-envy"] .image-frame {
+        background: linear-gradient(45deg, #1a1a1a, #332200);
+        box-shadow: 0 0 20px rgba(255, 223, 0, 0.1);
+    }
+
+    .bonbon[data-type="sunlit-envy"] .image-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(255, 223, 0, 0.1));
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .bonbon[data-type="sunlit-envy"] .image-frame:hover {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0 30px rgba(255, 223, 0, 0.2),
+            0 0 60px rgba(255, 223, 0, 0.1);
+    }
+
+    .bonbon[data-type="sunlit-envy"] .image-frame:hover::before {
+        opacity: 1;
+    }
+
+    .bonbon[data-type="sunlit-envy"]:hover .bonbon-name {
+        text-shadow: 0 0 10px rgba(255, 223, 0, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -828,6 +862,28 @@
         <h2 class="bonbon-name">Viridian Fairy</h2>
         <p class="bonbon-description">
           Inspired by the mystique of fin de siècle Paris, this absinthe-infused creation captures the essence of artistic revelation. Dark chocolate infused with hand-selected anise and wormwood, creating an experience that transcends mere confectionery to become a portal to enlightenment.
+        </p>
+      </div>
+
+      <div class="bonbon" data-type="sunlit-envy">
+        <div class="image-frame">
+          <div class="image-carousel">
+            <img src="image/Saffron (1).jpeg" alt="Sunlit Envy - Front view" class="active">
+            <img src="image/Saffron (2).jpeg" alt="Sunlit Envy - Side view">
+          </div>
+          <div class="image-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+          </div>
+          <div class="meridian"></div>
+          <div class="reflection"></div>
+          <div class="tasting-note">
+            "A symphony in gold and cream, where precious saffron threads dance with white chocolate in a celebration of light."
+          </div>
+        </div>
+        <h2 class="bonbon-name">Sunlit Envy</h2>
+        <p class="bonbon-description">
+          Each precious thread of saffron is hand-harvested at dawn, when the morning light first kisses the petals. These golden filaments are then lovingly suspended in a white chocolate ganache, creating a luminous experience that transforms mere confectionery into captured sunshine.
         </p>
       </div>
 
