@@ -700,6 +700,40 @@
     .dot:hover {
         background: rgba(212, 175, 55, 0.6);
     }
+
+    /* Special styling for Viridian Fairy */
+    .bonbon[data-type="viridian-fairy"] .image-frame {
+        background: linear-gradient(45deg, #1a1a1a, #1c3324);
+        box-shadow: 0 0 20px rgba(144, 238, 144, 0.1);
+    }
+
+    .bonbon[data-type="viridian-fairy"] .image-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(144, 238, 144, 0.1));
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .bonbon[data-type="viridian-fairy"] .image-frame:hover {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0 30px rgba(144, 238, 144, 0.2),
+            0 0 60px rgba(144, 238, 144, 0.1);
+    }
+
+    .bonbon[data-type="viridian-fairy"] .image-frame:hover::before {
+        opacity: 1;
+    }
+
+    .bonbon[data-type="viridian-fairy"]:hover .bonbon-name {
+        text-shadow: 0 0 10px rgba(144, 238, 144, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -761,13 +795,28 @@
         </p>
       </div>
 
-      <div class="bonbon">
+      <div class="bonbon" data-type="viridian-fairy">
         <div class="image-frame">
-          <img src="placeholder.jpg" alt="Viridian Fairy">
-          <div class="tasting-note">Pairs divinely with existential ponderings and a knowing smirk.</div>
+          <div class="image-carousel">
+            <img src="image/Anise (1).jpeg" alt="Viridian Fairy - Front view" class="active">
+            <img src="image/Anise (2).jpeg" alt="Viridian Fairy - Side view">
+            <img src="image/Anise (3).jpeg" alt="Viridian Fairy - Detail view">
+          </div>
+          <div class="image-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+          </div>
+          <div class="meridian"></div>
+          <div class="reflection"></div>
+          <div class="tasting-note">
+            "An ethereal dance of absinthe and anise, where each bite whispers tales of the Belle Époque's most enigmatic soirées."
+          </div>
         </div>
         <h2 class="bonbon-name">Viridian Fairy</h2>
-        <p class="bonbon-description">A daring waltz of obsidian dark chocolate, leading with the sharp intellect of star anise, and culminating in a ganache heart where the elusive Green Fairy bestows her absinthe-kissed blessing. Approach with curiosity.</p>
+        <p class="bonbon-description">
+          Inspired by the mystique of fin de siècle Paris, this absinthe-infused creation captures the essence of artistic revelation. Dark chocolate infused with hand-selected anise and wormwood, creating an experience that transcends mere confectionery to become a portal to enlightenment.
+        </p>
       </div>
 
       <div class="bonbon">
