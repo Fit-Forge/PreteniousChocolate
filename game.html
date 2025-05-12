@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Connoisseur's Challenge | Pretentious Chocolates</title>
+    <style>
+        body {
+            background: #000;
+            color: #d4af37;
+            font-family: 'Cormorant Garamond', serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            font-size: 1.4rem;
+            margin-bottom: 4rem;
+            opacity: 0.8;
+        }
+
+        .game-board {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .chocolate-description {
+            font-size: 1.2rem;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .option {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cormorant Garamond', serif;
+            color: #d4af37;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .option:hover {
+            border-color: rgba(212, 175, 55, 0.8);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .feedback {
+            text-align: center;
+            font-style: italic;
+            margin-top: 2rem;
+            min-height: 3rem;
+        }
+
+        .correct {
+            border-color: #4CAF50 !important;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .incorrect {
+            border-color: #f44336 !important;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .next-btn {
+            display: block;
+            margin: 2rem auto;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .return-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-style: italic;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+        }
+        .return-link:hover {
+            border-color: rgba(212, 175, 55, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <nav class="nav-link">
+            <a href="main.html" class="return-link">Return to Our Curated Collection</a>
+        </nav>
+        <h1>The Connoisseur's Challenge</h1>
+        <div class="subtitle">Test your ability to discern the truly extraordinary from the merely exceptional</div>
+
+        <div class="game-board">
+            <div class="chocolate-description">
+                "This transcendent creation whispers tales of midnight harvests and forbidden orchards. Its ephemeral notes dance upon the palate like moonbeams on ancient marble."
+            </div>
+
+            <div class="options-container">
+                <button class="option" onclick="checkAnswer(0)">
+                    L'Obscurité Mystique - A dark chocolate infused with rare night-blooming jasmine
+                </button>
+                <button class="option" onclick="checkAnswer(1)">
+                    Le Crépuscule Doré - A milk chocolate with hints of vanilla and caramel
+                </button>
+                <button class="option" onclick="checkAnswer(2)">
+                    La Symphonie Nocturne - A blend of dark and white chocolate with midnight-harvested berries
+                </button>
+                <button class="option" onclick="checkAnswer(3)">
+                    L'Énigme du Soir - A white chocolate infused with lavender and starlight
+                </button>
+            </div>
+
+            <div class="feedback"></div>
+            <button class="next-btn" onclick="nextQuestion()" style="display: none;">
+                Continue Your Journey
+            </button>
+        </div>
+
+        <div class="score">
+            Enlightenment Level: 0
+        </div>
+    </div>
+
+    <script src="js/analytics.js"></script>
+</body>
+</html> 
