@@ -780,6 +780,74 @@
     .bonbon[data-type="sunlit-envy"]:hover .bonbon-name {
         text-shadow: 0 0 10px rgba(255, 223, 0, 0.5);
     }
+
+    /* Add these styles for Nightshade's specific effects */
+    .bonbon[data-type="nightshade"] .image-frame {
+        background: linear-gradient(45deg, #1a1a1a, #2a1a2a);
+        box-shadow: 0 0 20px rgba(147, 112, 219, 0.1);
+    }
+
+    .bonbon[data-type="nightshade"] .image-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(147, 112, 219, 0.1));
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .bonbon[data-type="nightshade"] .image-frame:hover {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0 30px rgba(147, 112, 219, 0.2),
+            0 0 60px rgba(147, 112, 219, 0.1);
+    }
+
+    .bonbon[data-type="nightshade"] .image-frame:hover::before {
+        opacity: 1;
+    }
+
+    .bonbon[data-type="nightshade"]:hover .bonbon-name {
+        text-shadow: 0 0 10px rgba(147, 112, 219, 0.5);
+    }
+
+    /* Add these styles for Smoke and Sweetness */
+    .bonbon[data-type="smoke-sweetness"] .image-frame {
+        background: linear-gradient(45deg, #1a1a1a, #2a1810);
+        box-shadow: 0 0 20px rgba(205, 133, 63, 0.1);
+    }
+
+    .bonbon[data-type="smoke-sweetness"] .image-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(205, 133, 63, 0.1));
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .bonbon[data-type="smoke-sweetness"] .image-frame:hover {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0 30px rgba(205, 133, 63, 0.2),
+            0 0 60px rgba(205, 133, 63, 0.1);
+    }
+
+    .bonbon[data-type="smoke-sweetness"] .image-frame:hover::before {
+        opacity: 1;
+    }
+
+    .bonbon[data-type="smoke-sweetness"]:hover .bonbon-name {
+        text-shadow: 0 0 10px rgba(205, 133, 63, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -832,12 +900,12 @@
           <div class="meridian"></div>
           <div class="reflection"></div>
           <div class="tasting-note">
-            "A masterpiece of contrasts - the interplay of midnight-dark chocolate and gilded accents creates a visual symphony that preludes its profound depths."
+            "A midnight rendezvous between single-origin coffee and dark chocolate, where bitter meets sweet in perfect equilibrium."
           </div>
         </div>
         <h2 class="bonbon-name">Velvet Noir</h2>
         <p class="bonbon-description">
-          A sphere of darkness adorned with a golden meridian, this creation embodies the duality of existence. The shell, a canvas of the deepest obsidian, harbors mysteries within its perfectly curved form, while a singular stroke of gold bisects its surface - a reminder that even in darkness, light persists.
+          A sphere of darkness adorned with a golden meridian, this creation marries artisanal coffee with obsidian dark chocolate. The shell, a canvas of the deepest black, harbors an intense coffee-infused ganache within its perfectly curved form, while a singular stroke of gold bisects its surface - a reminder that even in darkness, light persists.
         </p>
       </div>
 
@@ -941,13 +1009,21 @@
         <p class="bonbon-description">A masterwork of mystical artistry, this dragon-scaled treasure guards the essence of a hidden paradise within. Delicate layers of raspberry-rose-hibiscus ganache dance with threads of lavender-infused dark chocolate, while the iridescent scales shimmer with ancient magic. Each piece is adorned using our closely-guarded technique of tempering with dragon's breath (or perhaps just the whispered incantations of our master chocolatiers), creating a portal to an enchanted realm where floral notes bloom eternal.</p>
       </div>
 
-      <div class="bonbon">
+      <div class="bonbon" data-type="nightshade">
         <div class="image-frame">
-          <img src="placeholder.jpg" alt="Nightshade">
-          <div class="tasting-note">A gothic indulgence that flirts with darkness, yet delivers pure enlightenment.</div>
+          <div class="image-carousel">
+            <img src="image/nightshade.jpeg" alt="Nightshade - Gothic skull-shaped confection" class="active">
+          </div>
+          <div class="meridian"></div>
+          <div class="reflection"></div>
+          <div class="tasting-note">
+            "A haunting dance of dark berries and forbidden fruits, where beauty and danger intertwine in gothic splendor."
+          </div>
         </div>
         <h2 class="bonbon-name">Nightshade</h2>
-        <p class="bonbon-description">This hauntingly beautiful skull-shaped confection, adorned in regal purple and ethereal white, conceals a lavender ganache of such profound intensity it transcends mere flavor. Each piece is meticulously hand-painted with edible platinum dust under the waning moon's ethereal glow, creating an otherworldly sheen that beckons to those who dare to embrace both darkness and decadence.</p>
+        <p class="bonbon-description">
+          A memento mori rendered in chocolate, this skull-shaped creation conceals a heart of wild berries and dark chocolate ganache. Each piece is hand-painted with edible silver, creating an ethereal sheen that catches candlelight like moonbeams on a gothic cathedral.
+        </p>
       </div>
 
       <div class="bonbon">
@@ -957,6 +1033,28 @@
         </div>
         <h2 class="bonbon-name">L'Hydromel Céleste</h2>
         <p class="bonbon-description">A revolutionary fusion of ancient and modern decadence, featuring a center of hand-crafted mead jelly, embraced by a white chocolate ganache infused with artisanal mead selected from our curator's private reserve. Each piece is aged in oak barrels previously used to age the very mead that inspired its creation, creating a recursive loop of flavor that challenges conventional temporal understanding.</p>
+      </div>
+
+      <div class="bonbon" data-type="smoke-sweetness">
+        <div class="image-frame">
+          <div class="image-carousel">
+            <img src="image/Smores (1).jpeg" alt="Smoke and Sweetness - Front view" class="active">
+            <img src="image/Smores (2).jpeg" alt="Smoke and Sweetness - Detail view">
+          </div>
+          <div class="image-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+          </div>
+          <div class="meridian"></div>
+          <div class="reflection"></div>
+          <div class="tasting-note">
+            "A refined reimagining of fireside memories, where smoke-kissed marshmallow meets artisanal dark chocolate in nostalgic revelry."
+          </div>
+        </div>
+        <h2 class="bonbon-name">Smoke and Sweetness</h2>
+        <p class="bonbon-description">
+          Memories of twilight gatherings transmuted into sublime confectionery. House-made marshmallow, delicately smoked over applewood embers, embraces a graham cracker-infused ganache within a shell of single-origin dark chocolate. Each piece is finished with a whisper of gold, like the last ember of a dying fire.
+        </p>
       </div>
     </div>
   </div>
