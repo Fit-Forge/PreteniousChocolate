@@ -106,13 +106,14 @@
 
     .image-frame:hover img {
       transform: scale(1.1);
+      filter: contrast(125%) brightness(105%);
     }
 
     .image-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: sepia(20%);
+      filter: contrast(115%);
       transition: transform 0.4s ease-out;
     }
 
@@ -445,9 +446,11 @@
         background: rgba(0, 0, 0, 0.9);
         display: none;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         z-index: 1000;
         backdrop-filter: blur(5px);
+        overflow-y: auto;
+        padding: 2rem 0;
     }
 
     .popup-content {
@@ -458,6 +461,9 @@
         width: 90%;
         position: relative;
         animation: fadeIn 0.3s ease-out;
+        margin: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
 
     .popup-content h2 {
@@ -538,8 +544,14 @@
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { 
+            opacity: 0; 
+            transform: translateY(-20px);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0);
+        }
     }
 
     .captcha-group {
@@ -974,10 +986,10 @@
                 <label for="subject">Nature of Inquiry</label>
                 <select id="subject" name="subject" required>
                     <option value="">Select a subject worthy of our attention</option>
-                    <option value="commission">Bespoke Commission</option>
-                    <option value="tasting">Private Tasting Arrangement</option>
-                    <option value="complaint">Lodge a Refined Complaint</option>
-                    <option value="praise">Express Profound Appreciation</option>
+                    <option value="commission" data-display="Express Profound Appreciation">Bespoke Commission</option>
+                    <option value="tasting" data-display="Express Profound Appreciation">Private Tasting Arrangement</option>
+                    <option value="complaint" data-display="Express Profound Appreciation">Lodge a Refined Complaint</option>
+                    <option value="praise" data-display="Express Profound Appreciation">Express Profound Appreciation</option>
                 </select>
             </div>
             
@@ -1151,6 +1163,35 @@
             const firstDot = frame.querySelector('.dot[data-index="0"]');
             firstDot.click();
         });
+    });
+
+    // Add this after your existing JavaScript
+    document.getElementById('subject').addEventListener('change', function() {
+        if (this.value) {
+            const selectedOption = this.options[this.selectedIndex];
+            const displayText = selectedOption.getAttribute('data-display');
+            selectedOption.textContent = displayText;
+            
+            // Reset other options to original text
+            Array.from(this.options).forEach(option => {
+                if (option !== selectedOption && option.value) {
+                    option.textContent = option.getAttribute('data-display');
+                }
+            });
+        }
+    });
+
+    // Reset select text when form closes
+    document.querySelector('.close-popup').addEventListener('click', function() {
+        const select = document.getElementById('subject');
+        Array.from(select.options).forEach((option, index) => {
+            if (index === 0) {
+                option.textContent = 'Select a subject worthy of our attention';
+            } else {
+                option.textContent = option.getAttribute('data-display');
+            }
+        });
+        select.selectedIndex = 0;
     });
   </script>
   <script src="js/analytics.js"></script>
