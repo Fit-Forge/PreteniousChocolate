@@ -848,6 +848,40 @@
     .bonbon[data-type="smoke-sweetness"]:hover .bonbon-name {
         text-shadow: 0 0 10px rgba(205, 133, 63, 0.5);
     }
+
+    /* Add these styles for Secret Garden */
+    .bonbon[data-type="secret-garden"] .image-frame {
+        background: linear-gradient(45deg, #1a1a1a, #1a2419);
+        box-shadow: 0 0 20px rgba(152, 251, 152, 0.1);
+    }
+
+    .bonbon[data-type="secret-garden"] .image-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(152, 251, 152, 0.1));
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .bonbon[data-type="secret-garden"] .image-frame:hover {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0 30px rgba(152, 251, 152, 0.2),
+            0 0 60px rgba(152, 251, 152, 0.1);
+    }
+
+    .bonbon[data-type="secret-garden"] .image-frame:hover::before {
+        opacity: 1;
+    }
+
+    .bonbon[data-type="secret-garden"]:hover .bonbon-name {
+        text-shadow: 0 0 10px rgba(152, 251, 152, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -1000,13 +1034,26 @@
         <p class="bonbon-description">A harmonious trinity of raspberry, rose, and hibiscus, each element carefully extracted at precisely the right moment of bloom. The ganache whispers of secret gardens and forgotten summers, while subtle notes of Damascus rose transport you to ancient Persian pleasure gardens.</p>
       </div>
 
-      <div class="bonbon">
+      <div class="bonbon" data-type="secret-garden">
         <div class="image-frame">
-          <img src="placeholder.jpg" alt="Secret Garden">
-          <div class="tasting-note">Each bite reveals a hidden paradise, where dragon's breath meets garden's grace.</div>
+          <div class="image-carousel">
+            <img src="image/Secret Garden (1).jpeg" alt="Secret Garden - Front view" class="active">
+            <img src="image/Secret Garden (2).jpeg" alt="Secret Garden - Detail view">
+          </div>
+          <div class="image-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+          </div>
+          <div class="meridian"></div>
+          <div class="reflection"></div>
+          <div class="tasting-note">
+            "Each bite reveals a hidden paradise, where dragon's breath meets garden's grace."
+          </div>
         </div>
         <h2 class="bonbon-name">Secret Garden</h2>
-        <p class="bonbon-description">A masterwork of mystical artistry, this dragon-scaled treasure guards the essence of a hidden paradise within. Delicate layers of raspberry-rose-hibiscus ganache dance with threads of lavender-infused dark chocolate, while the iridescent scales shimmer with ancient magic. Each piece is adorned using our closely-guarded technique of tempering with dragon's breath (or perhaps just the whispered incantations of our master chocolatiers), creating a portal to an enchanted realm where floral notes bloom eternal.</p>
+        <p class="bonbon-description">
+          A masterwork of mystical artistry, this dragon-scaled treasure guards the essence of a hidden paradise within. Delicate layers of raspberry-rose-hibiscus ganache dance with threads of lavender-infused dark chocolate, while the iridescent scales shimmer with ancient magic. Each piece is adorned using our closely-guarded technique of tempering with dragon's breath (or perhaps just the whispered incantations of our master chocolatiers), creating a portal to an enchanted realm where floral notes bloom eternal.
+        </p>
       </div>
 
       <div class="bonbon" data-type="nightshade">
