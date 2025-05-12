@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pretentious Chocolates - Collection</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     html, body {
       margin: 0;
@@ -434,6 +435,225 @@
       color: #fff;
       text-shadow: 0 0 8px rgba(212, 175, 55, 0.7);
     }
+
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .popup-content {
+        background: rgba(0, 0, 0, 0.95);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        padding: 3rem;
+        max-width: 600px;
+        width: 90%;
+        position: relative;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .popup-content h2 {
+        color: #d4af37;
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .popup-subtitle {
+        text-align: center;
+        font-style: italic;
+        color: rgba(212, 175, 55, 0.7);
+        margin-bottom: 2rem;
+    }
+
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        color: #d4af37;
+        font-style: italic;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        padding: 0.8rem;
+        color: #d4af37;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .form-group textarea {
+        height: 150px;
+        resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: rgba(212, 175, 55, 0.8);
+        outline: none;
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .form-actions button {
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        color: #d4af37;
+        padding: 0.8rem 1.5rem;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .form-actions button:hover {
+        background: rgba(212, 175, 55, 0.2);
+        transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .captcha-group {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 1.5rem;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        margin: 1.5rem 0;
+    }
+
+    .pretentious-captcha {
+        margin-top: 1rem;
+    }
+
+    .captcha-question {
+        font-style: italic;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Special styling for Velvet Noir */
+    .bonbon[data-type="velvet-noir"] .image-frame {
+        background: linear-gradient(45deg, #000000, #1a1a1a);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        transition: all 0.5s ease;
+    }
+
+    .bonbon[data-type="velvet-noir"] .image-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1));
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .bonbon[data-type="velvet-noir"] .image-frame:hover {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0 30px rgba(212, 175, 55, 0.2),
+            0 0 60px rgba(212, 175, 55, 0.1);
+    }
+
+    .bonbon[data-type="velvet-noir"] .image-frame:hover::before {
+        opacity: 1;
+    }
+
+    .bonbon[data-type="velvet-noir"] img {
+        transform: scale(1.1);
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bonbon[data-type="velvet-noir"]:hover .bonbon-name {
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    /* Gold meridian animation */
+    .bonbon[data-type="velvet-noir"] .meridian {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(212, 175, 55, 0.3),
+            rgba(212, 175, 55, 0.8),
+            rgba(212, 175, 55, 0.3),
+            transparent
+        );
+        transform: translateY(-50%) rotate(-45deg);
+        animation: shimmer 3s infinite linear;
+        z-index: 2;
+    }
+
+    @keyframes shimmer {
+        0% {
+            opacity: 0.3;
+            filter: blur(2px);
+        }
+        50% {
+            opacity: 0.8;
+            filter: blur(0px);
+        }
+        100% {
+            opacity: 0.3;
+            filter: blur(2px);
+        }
+    }
+
+    /* Reflection effect */
+    .bonbon[data-type="velvet-noir"] .reflection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 30% 30%,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 60%
+        );
+        z-index: 2;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .bonbon[data-type="velvet-noir"] .image-frame:hover .reflection {
+        opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -469,13 +689,19 @@
     </header>
 
     <div class="gallery">
-      <div class="bonbon">
+      <div class="bonbon" data-type="velvet-noir">
         <div class="image-frame">
-          <img src="placeholder.jpg" alt="Velvet Noir">
-          <div class="tasting-note">Pairs exquisitely with a fleeting sense of superiority.</div>
+          <img src="images/velvet-noir.jpg" alt="Velvet Noir - A study in darkness and light">
+          <div class="meridian"></div>
+          <div class="reflection"></div>
+          <div class="tasting-note">
+            "A masterpiece of contrasts - the interplay of midnight-dark chocolate and gilded accents creates a visual symphony that preludes its profound depths."
+          </div>
         </div>
         <h2 class="bonbon-name">Velvet Noir</h2>
-        <p class="bonbon-description">A triumvirate of Tahitian vanilla, hand-selected hazelnuts from the Italian Piedmont, and rare Ethiopian coffee beans harvested by moonlight. Each element is carefully orchestrated to create a morning ritual worthy of royalty.</p>
+        <p class="bonbon-description">
+          A sphere of darkness adorned with a golden meridian, this creation embodies the duality of existence. The shell, a canvas of the deepest obsidian, harbors mysteries within its perfectly curved form, while a singular stroke of gold bisects its surface - a reminder that even in darkness, light persists.
+        </p>
       </div>
 
       <div class="bonbon">
@@ -617,84 +843,169 @@
         <a href="commissions.html" class="nav-link">Bespoke Commissions</a>
         <a href="protocols.html" class="nav-link">Consumption Protocols</a>
         <a href="build.html" class="nav-link">Design Your Destiny</a>
+        <a href="#" class="nav-link" id="contact-link">Contact the Curator</a>
       </div>
     </div>
   </section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const imageFrames = document.querySelectorAll('.image-frame');
-      const lines = Array.from(document.querySelectorAll('.decorative-line'));
-      
-      function setRandomPosition(line) {
-        const randomTop = Math.random() * 60 + 20;
-        const randomLeft = Math.random() * 60 + 20;
-        const randomRotate = Math.random() * 360;
+  <div class="popup-overlay" id="contact-popup">
+    <div class="popup-content">
+        <h2>Correspondence with the Curator</h2>
+        <p class="popup-subtitle">For matters of utmost refinement and sophistication</p>
         
-        line.style.top = `${randomTop}%`;
-        line.style.left = `${randomLeft}%`;
-        line.style.transform = `rotate(${randomRotate}deg) scale(1.5)`;
-        line.style.width = '200px';
-        line.style.height = '3px';
-      }
-
-      // Set initial positions
-      lines.forEach(setRandomPosition);
-
-      imageFrames.forEach(frame => {
-        frame.addEventListener('mouseenter', () => {
-          const rect = frame.getBoundingClientRect();
-          const buffer = 10;
-
-          lines.forEach(line => {
-            line.style.animation = 'none';
-            line.style.opacity = '0.8';
-          });
-
-          // Top line
-          lines[0].style.top = `${rect.top - buffer}px`;
-          lines[0].style.left = `${rect.left - buffer}px`;
-          lines[0].style.width = `${rect.width + buffer * 2}px`;
-          lines[0].style.height = '3px';
-          lines[0].style.transform = 'rotate(0deg) scale(1)';
-
-          // Right line
-          lines[1].style.top = `${rect.top - buffer}px`;
-          lines[1].style.left = `${rect.right + buffer}px`;
-          lines[1].style.width = '3px';
-          lines[1].style.height = `${rect.height + buffer * 2}px`;
-          lines[1].style.transform = 'rotate(0deg) scale(1)';
-
-          // Bottom line
-          lines[2].style.top = `${rect.bottom + buffer}px`;
-          lines[2].style.left = `${rect.left - buffer}px`;
-          lines[2].style.width = `${rect.width + buffer * 2}px`;
-          lines[2].style.height = '3px';
-          lines[2].style.transform = 'rotate(0deg) scale(1)';
-
-          // Left line
-          lines[3].style.top = `${rect.top - buffer}px`;
-          lines[3].style.left = `${rect.left - buffer}px`;
-          lines[3].style.width = '3px';
-          lines[3].style.height = `${rect.height + buffer * 2}px`;
-          lines[3].style.transform = 'rotate(0deg) scale(1)';
-        });
-
-        frame.addEventListener('mouseleave', () => {
-          lines.forEach((line, i) => {
-            // Start floating animation after the transition
-            setTimeout(() => {
-              line.style.animation = 'floatAnimation 20s infinite ease-in-out';
-              line.style.animationDelay = `${-i * 5}s`;
-            }, 2000);
+        <form id="contact-form" class="contact-form">
+            <div class="form-group">
+                <label for="name">Your Distinguished Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
             
-            // Set random position with slow transition
-            setRandomPosition(line);
-            line.style.opacity = '0.4';
-          });
-        });
-      });
+            <div class="form-group">
+                <label for="email">Electronic Correspondence Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">Nature of Inquiry</label>
+                <select id="subject" name="subject" required>
+                    <option value="">Select a subject worthy of our attention</option>
+                    <option value="commission">Bespoke Commission</option>
+                    <option value="tasting">Private Tasting Arrangement</option>
+                    <option value="complaint">Lodge a Refined Complaint</option>
+                    <option value="praise">Express Profound Appreciation</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Your Eloquent Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            
+            <div class="form-group captcha-group">
+                <label>Prove Your Refinement</label>
+                <div class="pretentious-captcha">
+                    <p class="captcha-question"></p>
+                    <input type="text" id="captcha-answer" required>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit">Send with Flourish</button>
+                <button type="button" class="close-popup">Return to Contemplation</button>
+            </div>
+        </form>
+    </div>
+  </div>
+
+  <script>
+    // Initialize EmailJS
+    (function() {
+        emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your actual EmailJS public key
+    })();
+
+    document.getElementById('contact-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('contact-popup').style.display = 'flex';
+        setRandomCaptcha();
     });
+
+    document.querySelector('.close-popup').addEventListener('click', function() {
+        document.getElementById('contact-popup').style.display = 'none';
+        document.getElementById('captcha-answer').value = '';
+        setRandomCaptcha();
+    });
+
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const captchaAnswer = document.getElementById('captcha-answer').value.toLowerCase().trim();
+        const isCorrect = window.currentCaptcha.answer === captchaAnswer || 
+                         window.currentCaptcha.alternates.includes(captchaAnswer);
+
+        if (!isCorrect) {
+            alert('Your answer lacks the required sophistication. Please try again, this time with more... panache.');
+            setRandomCaptcha();
+            document.getElementById('captcha-answer').value = '';
+            return;
+        }
+
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Dispatching...';
+        submitBtn.disabled = true;
+
+        // Prepare the email parameters
+        const templateParams = {
+            to_email: 'Brianholm@yahoo.com',
+            from_name: document.getElementById('name').value,
+            from_email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+        };
+
+        // Send the email
+        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+            .then(() => {
+                // Success
+                alert('Your message has been dispatched with the utmost elegance.');
+                document.getElementById('contact-popup').style.display = 'none';
+                this.reset();
+                setRandomCaptcha(); // Reset captcha for next time
+            })
+            .catch((error) => {
+                // Error
+                alert('A most unfortunate error has occurred. Please try again later.');
+                console.error('EmailJS error:', error);
+            })
+            .finally(() => {
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+    });
+
+    // Close popup when clicking outside
+    document.getElementById('contact-popup').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+        }
+    });
+
+    const captchaQuestions = [
+        {
+            question: "Complete this phrase: 'Life is like a box of...' (hint: avoid pedestrian confectionery references)",
+            answer: "artisanal truffles",
+            alternates: ["handcrafted pralines", "curated bonbons", "single-origin chocolates"]
+        },
+        {
+            question: "What does one pair with a midnight philosophical discussion? (hint: not coffee)",
+            answer: "absinthe",
+            alternates: ["aged cognac", "vintage port", "rare whisky"]
+        },
+        {
+            question: "Complete this word: 'Pretent___'",
+            answer: "ious",
+            alternates: ["ious"]
+        },
+        {
+            question: "What color best describes the soul of an artist? (hint: not blue)",
+            answer: "azure",
+            alternates: ["cerulean", "cobalt", "indigo"]
+        },
+        {
+            question: "What does one contemplate while sipping artisanal hot chocolate? (hint: not life)",
+            answer: "existence",
+            alternates: ["infinity", "eternity", "the void"]
+        }
+    ];
+
+    function setRandomCaptcha() {
+        const captchaQuestion = document.querySelector('.captcha-question');
+        const randomIndex = Math.floor(Math.random() * captchaQuestions.length);
+        window.currentCaptcha = captchaQuestions[randomIndex];
+        captchaQuestion.textContent = currentCaptcha.question;
+    }
   </script>
+  <script src="js/analytics.js"></script>
 </body>
 </html> 
