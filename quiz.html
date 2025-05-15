@@ -136,7 +136,10 @@
 <body>
   <div class="quiz-container">
     <h1>The Pretentiousness Quotient Assessment</h1>
-    <div class="subtitle">Discover your position in the hierarchy of refined sensibilities</div>
+    <div class="subtitle">
+      Embark upon a journey of self-discovery as we quantify your capacity for elevated consciousness and refined disdain. 
+      Are you merely existing, or are you truly cultivating an air of sophisticated superiority?
+    </div>
     
     <form id="pretentiousness-quiz">
       <div class="question">
@@ -249,6 +252,72 @@
         </div>
       </div>
 
+      <div class="question">
+        <h2>6. What is your preferred method of chocolate consumption?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q6" value="1">
+            <span>I simply eat it and enjoy</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q6" value="2">
+            <span>I follow a strict tasting protocol involving all five senses</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q6" value="3">
+            <span>I conduct a full phenomenological analysis while listening to Debussy on original vinyl</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q6" value="4">
+            <span>I commune with each morsel in a zero-gravity chamber while a string quartet performs Schoenberg's atonal works on period instruments</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question">
+        <h2>7. How do you select your dinner plates?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q7" value="1">
+            <span>Whatever matches my kitchen</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q7" value="2">
+            <span>Artisanal ceramics from obscure Japanese masters</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q7" value="3">
+            <span>Each plate is a commissioned piece inspired by a different philosophical movement</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q7" value="4">
+            <span>I only eat from recovered shards of ancient Mesopotamian pottery, reassembled under a full moon</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question">
+        <h2>8. What's your approach to mineral water?</h2>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q8" value="1">
+            <span>Tap water is fine</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q8" value="2">
+            <span>I have a preferred brand from an artesian well</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q8" value="3">
+            <span>I only drink from springs that have never been gazed upon by human eyes</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q8" value="4">
+            <span>My water sommelier sources glacier melt from elevations above 4,000 meters, collected only during lunar eclipses</span>
+          </label>
+        </div>
+      </div>
+
       <button type="submit" class="submit-btn">Reveal Your Pretentiousness Quotient</button>
     </form>
 
@@ -273,14 +342,14 @@
       const resultDiv = document.getElementById('quiz-result');
       
       let assessment;
-      if (score < 15) {
-        assessment = "Tragically Pedestrian: Your tastes are distressingly... accessible. Consider subscribing to our newsletter on cultivating manufactured sophistication.";
-      } else if (score < 25) {
-        assessment = "Emerging Elitist: You're developing a palate for pretension, but still occasionally enjoy things unironically. There's room for improvement.";
-      } else if (score < 35) {
-        assessment = "Distinguished Dilettante: Your ability to detect subtle notes of pretentiousness in everything is truly remarkable. You're well on your way to complete social insufferability.";
+      if (score < 18) {
+        assessment = "Aesthetic Apprentice: You stand at the threshold of a magnificent journey into refined sensibilities. Like a rare cacao bean waiting to be transformed into sublime chocolate, your potential for sophistication lies dormant, yearning to emerge. Our curated experiences await your evolution.";
+      } else if (score < 24) {
+        assessment = "Cultivated Connoisseur: Your palate for the extraordinary is blossoming beautifully. You've begun to appreciate the subtle interplay between art and existence, though your journey through the gardens of refinement has only just begun. Your future holds infinite possibilities for elevated experiences.";
+      } else if (score < 28) {
+        assessment = "Enlightened Aesthete: Your sophisticated worldview is a testament to your dedication to life's finer offerings. You understand that true luxury lies not in mere possessions, but in the depth of one's appreciation for the sublime. Your dinner parties must be transcendent experiences.";
       } else {
-        assessment = "Supreme Sophisticate: Your refined sensibilities are so acute that you find it physically painful to be in the presence of mass-market anything. Bravo!";
+        assessment = "Ethereal Luminary: You have achieved what few dare to dream - a state of perpetual appreciation for life's most exquisite moments. Your refined sensibilities transform the mundane into the extraordinary, and your presence elevates any gathering into a salon worthy of historical note. You are truly among the architects of sophisticated living.";
       }
       
       resultText.textContent = assessment;
