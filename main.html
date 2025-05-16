@@ -609,23 +609,6 @@
         }
     }
 
-    .captcha-group {
-        background: rgba(0, 0, 0, 0.5);
-        padding: 1.5rem;
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        margin: 1.5rem 0;
-    }
-
-    .pretentious-captcha {
-        margin-top: 1rem;
-    }
-
-    .captcha-question {
-        font-style: italic;
-        margin-bottom: 1rem;
-        line-height: 1.6;
-    }
-
     /* Special styling for Velvet Noir */
     .bonbon[data-type="velvet-noir"] .image-frame {
         background: linear-gradient(45deg, #000000, #1a1a1a);
@@ -1172,14 +1155,6 @@
                 <textarea id="message" name="message" required></textarea>
             </div>
             
-            <div class="form-group captcha-group">
-                <label>Prove Your Refinement</label>
-                <div class="pretentious-captcha">
-                    <p class="captcha-question"></p>
-                    <input type="text" id="captcha-answer" required>
-                </div>
-            </div>
-            
             <div class="form-actions">
                 <button type="submit">Send with Flourish</button>
                 <button type="button" class="close-popup">Return to Contemplation</button>
@@ -1191,7 +1166,7 @@
   <script>
     // Initialize EmailJS
     (function() {
-        emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your actual EmailJS public key
+        emailjs.init("M0Zv_7Qd0h4M4HxLb");
     })();
 
     document.getElementById('contact-link').addEventListener('click', function(e) {
@@ -1201,42 +1176,32 @@
 
     document.querySelector('.close-popup').addEventListener('click', function() {
         document.getElementById('contact-popup').style.display = 'none';
-        document.getElementById('captcha-answer').value = '';
     });
 
     document.getElementById('contact-form').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const captchaAnswer = document.getElementById('captcha-answer').value.toLowerCase().trim();
-        const isCorrect = window.currentCaptcha.answer === captchaAnswer || 
-                         window.currentCaptcha.alternates.includes(captchaAnswer);
-
-        if (!isCorrect) {
-            alert('Your answer lacks the required sophistication. Please try again, this time with more... panache.');
-            document.getElementById('captcha-answer').value = '';
-            return;
-        }
-
         // Show loading state
         const submitBtn = this.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Dispatching...';
         submitBtn.disabled = true;
 
-        // Prepare the email parameters
+        // Collect form data before resetting
         const templateParams = {
-            to_email: 'Brianholm@yahoo.com',
+            to_email: 'Brian@photopersuasion.net',
             from_name: document.getElementById('name').value,
             from_email: document.getElementById('email').value,
-            subject: document.getElementById('subject').value,
+            subject: `Pretentious Chocolates - ${document.getElementById('subject').options[document.getElementById('subject').selectedIndex].text}`,
             message: document.getElementById('message').value
         };
 
         // Send the email
-        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+        emailjs.send('service_k5386u3', 'template_09lb2jm', templateParams)
             .then(() => {
                 // Success
                 alert('Your message has been dispatched with the utmost elegance.');
+                // Close and reset form after successful send
                 document.getElementById('contact-popup').style.display = 'none';
                 this.reset();
             })
