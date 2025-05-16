@@ -1197,13 +1197,11 @@
     document.getElementById('contact-link').addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('contact-popup').style.display = 'flex';
-        setRandomCaptcha();
     });
 
     document.querySelector('.close-popup').addEventListener('click', function() {
         document.getElementById('contact-popup').style.display = 'none';
         document.getElementById('captcha-answer').value = '';
-        setRandomCaptcha();
     });
 
     document.getElementById('contact-form').addEventListener('submit', function(e) {
@@ -1215,7 +1213,6 @@
 
         if (!isCorrect) {
             alert('Your answer lacks the required sophistication. Please try again, this time with more... panache.');
-            setRandomCaptcha();
             document.getElementById('captcha-answer').value = '';
             return;
         }
@@ -1242,7 +1239,6 @@
                 alert('Your message has been dispatched with the utmost elegance.');
                 document.getElementById('contact-popup').style.display = 'none';
                 this.reset();
-                setRandomCaptcha(); // Reset captcha for next time
             })
             .catch((error) => {
                 // Error
@@ -1262,41 +1258,6 @@
             this.style.display = 'none';
         }
     });
-
-    const captchaQuestions = [
-        {
-            question: "Complete this phrase: 'Life is like a box of...' (hint: avoid pedestrian confectionery references)",
-            answer: "artisanal truffles",
-            alternates: ["handcrafted pralines", "curated bonbons", "single-origin chocolates"]
-        },
-        {
-            question: "What does one pair with a midnight philosophical discussion? (hint: not coffee)",
-            answer: "absinthe",
-            alternates: ["aged cognac", "vintage port", "rare whisky"]
-        },
-        {
-            question: "Complete this word: 'Pretent___'",
-            answer: "ious",
-            alternates: ["ious"]
-        },
-        {
-            question: "What color best describes the soul of an artist? (hint: not blue)",
-            answer: "azure",
-            alternates: ["cerulean", "cobalt", "indigo"]
-        },
-        {
-            question: "What does one contemplate while sipping artisanal hot chocolate? (hint: not life)",
-            answer: "existence",
-            alternates: ["infinity", "eternity", "the void"]
-        }
-    ];
-
-    function setRandomCaptcha() {
-        const captchaQuestion = document.querySelector('.captcha-question');
-        const randomIndex = Math.floor(Math.random() * captchaQuestions.length);
-        window.currentCaptcha = captchaQuestions[randomIndex];
-        captchaQuestion.textContent = currentCaptcha.question;
-    }
 
     // Image carousel functionality
     document.querySelectorAll('.image-dots .dot').forEach(dot => {
