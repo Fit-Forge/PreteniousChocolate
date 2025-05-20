@@ -577,11 +577,16 @@
             document.querySelector('.pretentious-quote').textContent = randomQuote;
             
             if (highScores.length < 5 || score > highScores[highScores.length - 1].score) {
-                const playerName = prompt('A distinguished performance! Please enter your name:', 'Anonymous Connoisseur');
+                const playerName = prompt('A most distinguished performance! Please enter your name:', 'Anonymous Connoisseur');
                 if (playerName) {
                     saveHighScore(playerName, score);
                 }
             }
+
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 3000);
         }
 
         function restartGame() {
