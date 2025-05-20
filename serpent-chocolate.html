@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Serpent du Chocolat - A Refined Tasting Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: #d4af37;
+            font-family: 'Cormorant Garamond', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            margin: 2rem;
+        }
+
+        canvas {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .high-scores {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            text-align: right;
+        }
+
+        .ingredient-description {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-style: italic;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        button {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                linear-gradient(45deg, #d4af37 1px, transparent 1px),
+                linear-gradient(-45deg, #d4af37 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .start-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .controls {
+            margin-top: 1rem;
+            font-style: italic;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-decoration: none;
+            color: #d4af37;
+            font-style: italic;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .home-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateX(-50%) translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <a href="main.html" class="home-link">Return to the Collection</a>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div class="hud">
+            <div>Score: <span id="score">0</span></div>
+            <div>Length: <span id="length">1</span> truffles</div>
+        </div>
+        <div class="high-scores">
+            <h3>Hall of Distinguished Connoisseurs</h3>
+            <div id="scoreList"></div>
+        </div>
+        <div class="ingredient-description" id="description"></div>
+        <div class="game-over" id="gameOver">
+            <h2>A Most Refined Conclusion</h2>
+            <div>Final Length: <span id="finalLength">0</span> truffles</div>
+            <div>Final Score: <span id="finalScore">0</span> points</div>
+            <button onclick="restartGame()">Begin Another Tasting</button>
+            <div class="pretentious-quote"></div>
+        </div>
+    </div>
+
+    <div class="start-screen" id="startScreen">
+        <h2>Le Serpent du Chocolat</h2>
+        <p>A journey through refined confectionery</p>
+        <div class="controls">
+            Use arrow keys or swipe to guide your tasting journey
+        </div>
+        <button onclick="startGame()">Begin Tasting</button>
+    </div>
+
+    <script>
+        const GRID_SIZE = 20;
+        const CELL_SIZE = 25;
+        const INITIAL_SPEED = 150; // ms per move
+        
+        const QUOTES = [
+            "One must savor life's refined moments with the utmost deliberation",
+            "In pursuit of perfection, we become the essence of elegance",
+            "To consume chocolate without contemplation is an act of barbarism",
+            "Each morsel tells a story of terroir and tradition",
+            "The path to enlightenment is paved with artisanal confections"
+        ];
+
+        const INGREDIENTS = [
+            { 
+                name: 'Gold Leaf', 
+                points: 50, 
+                description: 'A delicate sheet of 24-karat refinement, sourced from a secret Alpine vault',
+                color: '#FFD700'
+            },
+            { 
+                name: 'Madagascar Vanilla', 
+                points: 30, 
+                description: 'Hand-harvested under a full moon by artisanal vanilla whisperers',
+                color: '#F3E5AB'
+            },
+            { 
+                name: 'Rare Cacao', 
+                points: 20, 
+                description: 'From an undisclosed South American estate, guarded by philosopher-farmers',
+                color: '#8B4513'
+            },
+            { 
+                name: 'Fleur de Sel', 
+                points: 15, 
+                description: 'Harvested by blind monks at dawn from ancient Celtic salt ponds',
+                color: '#FFFFFF'
+            },
+            { 
+                name: 'Saffron Threads', 
+                points: 40, 
+                description: 'Each strand blessed by a committee of Persian mystics',
+                color: '#FFB90F'
+            },
+            { 
+                name: 'Tonka Bean', 
+                points: 25, 
+                description: 'Forbidden in lesser establishments, acquired through clandestine means',
+                color: '#8B4726'
+            }
+        ];
+
+        let canvas, ctx;
+        let snake = [];
+        let direction = 'right';
+        let nextDirection = 'right';
+        let food = {};
+        let score = 0;
+        let gameLoop;
+        let gameOver = false;
+        let particles;
+        let highScores = [];
+
+        const SOUNDS = {
+            collect: new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjIwLjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEAAABVgANTU1NTU1Q0NDQ0NDUFBQUFBQXl5eXl5ea2tra2tra3l5eXl5eYaGhoaGhpSUlJSUlKGhoaGhoaGvr6+vr6+8vLy8vLzKysrKysrX19fX19fX5eXl5eXl8vLy8vLy////////////AAAAAExhdmM1OC4yNwAAAAAAAAAAAAAAACQCgAAAAAAAAAVY82AhbwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+MYxAALACwAAP/AADwQKVE9YWDGPkQWpT66yk4+zIiYPoTUaT3tnU+NFRUWQKXjaEwdLqLzR0ymNrZTadF1MpmMqlE5HhYoGjx+NCJChxMVDESeKnCxXLFIxUnBwXJwVDxU/+MYxA8L0DU0AP+0ANkVHz0aNCyQCWR3IqKiwkuF5iIuMKxcYVBwVCAyKjwqRJwVKkSIVCYRGShERkQWC4QGChMip0KgQIECBAgMEBgoQGCAgKnCwWGCAwQGCAyKn/8YxBQJwAE0AAP8AAI0FQuCgyVPLFQYWE0YVBITBUPDwsHxgaHB0lC0vBgoHQgKiwkHhAYIDAoFAgMDggIEBgUGBQUGBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUF/+MYxDUJyAEYAP8AABQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU/+MYxPQJwAEQAAP8AAQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU")
+        };
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (!touchStartX || !touchStartY) return;
+
+            let touchEndX = e.touches[0].clientX;
+            let touchEndY = e.touches[0].clientY;
+
+            let dx = touchEndX - touchStartX;
+            let dy = touchEndY - touchStartY;
+
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx > 0 && direction !== 'left') nextDirection = 'right';
+                else if (dx < 0 && direction !== 'right') nextDirection = 'left';
+            } else {
+                if (dy > 0 && direction !== 'up') nextDirection = 'down';
+                else if (dy < 0 && direction !== 'down') nextDirection = 'up';
+            }
+
+            touchStartX = null;
+            touchStartY = null;
+        });
+
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+
+            canvas.width = GRID_SIZE * CELL_SIZE;
+            canvas.height = GRID_SIZE * CELL_SIZE;
+
+            loadHighScores();
+        };
+
+        function initGame() {
+            snake = [{x: 5, y: 5}];
+            direction = 'right';
+            nextDirection = 'right';
+            score = 0;
+            gameOver = false;
+
+            placeFood();
+
+            if (gameLoop) clearInterval(gameLoop);
+            gameLoop = setInterval(update, INITIAL_SPEED);
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('length').textContent = snake.length;
+            document.getElementById('gameOver').style.display = 'none';
+
+            particles = new ParticleSystem();
+        }
+
+        function update() {
+            if (gameOver) return;
+
+            direction = nextDirection;
+
+            const head = {...snake[0]};
+            switch(direction) {
+                case 'up': head.y--; break;
+                case 'down': head.y++; break;
+                case 'left': head.x--; break;
+                case 'right': head.x++; break;
+            }
+
+            if (head.x < 0 || head.x >= GRID_SIZE || 
+                head.y < 0 || head.y >= GRID_SIZE ||
+                snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                endGame();
+                return;
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score += food.points;
+                document.getElementById('score').textContent = score;
+                document.getElementById('length').textContent = snake.length;
+                showDescription(food.description);
+                
+                particles.createExplosion(
+                    food.x * CELL_SIZE + CELL_SIZE/2,
+                    food.y * CELL_SIZE + CELL_SIZE/2,
+                    food.color
+                );
+                
+                SOUNDS.collect.currentTime = 0;
+                SOUNDS.collect.play();
+                
+                placeFood();
+            } else {
+                snake.pop();
+            }
+
+            draw();
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            snake.forEach((segment, index) => {
+                ctx.fillStyle = index === 0 ? '#d4af37' : 'rgba(212, 175, 55, 0.7)';
+                ctx.beginPath();
+                ctx.arc(
+                    segment.x * CELL_SIZE + CELL_SIZE/2,
+                    segment.y * CELL_SIZE + CELL_SIZE/2,
+                    CELL_SIZE/2 - 2,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            });
+
+            ctx.fillStyle = '#d4af37';
+            ctx.beginPath();
+            ctx.arc(
+                food.x * CELL_SIZE + CELL_SIZE/2,
+                food.y * CELL_SIZE + CELL_SIZE/2,
+                CELL_SIZE/3,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+
+            particles.update();
+            particles.draw(ctx);
+        }
+
+        function placeFood() {
+            // Get all possible positions
+            let possiblePositions = [];
+            for (let x = 0; x < GRID_SIZE; x++) {
+                for (let y = 0; y < GRID_SIZE; y++) {
+                    // Check if position is not occupied by snake
+                    if (!snake.some(segment => segment.x === x && segment.y === y)) {
+                        // Check if position is not too close to snake head
+                        const head = snake[0];
+                        const distance = Math.sqrt(Math.pow(head.x - x, 2) + Math.pow(head.y - y, 2));
+                        if (distance > 3) { // Minimum distance of 3 grid cells
+                            possiblePositions.push({x, y});
+                        }
+                    }
+                }
+            }
+
+            // If no valid positions found, just use any non-snake position
+            if (possiblePositions.length === 0) {
+                possiblePositions = Array.from({length: GRID_SIZE * GRID_SIZE}, (_, i) => ({
+                    x: Math.floor(i / GRID_SIZE),
+                    y: i % GRID_SIZE
+                })).filter(pos => !snake.some(segment => 
+                    segment.x === pos.x && segment.y === pos.y
+                ));
+            }
+
+            // Select random position from possible positions
+            const position = possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
+            
+            // Create new food with random ingredient
+            food = {
+                ...position,
+                ...INGREDIENTS[Math.floor(Math.random() * INGREDIENTS.length)]
+            };
+        }
+
+        function showDescription(text) {
+            const desc = document.getElementById('description');
+            desc.textContent = text;
+            desc.style.opacity = 1;
+            setTimeout(() => desc.style.opacity = 0, 2000);
+        }
+
+        function endGame() {
+            gameOver = true;
+            clearInterval(gameLoop);
+            SOUNDS.gameOver.play();
+            
+            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalLength').textContent = snake.length;
+            
+            const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+            document.querySelector('.pretentious-quote').textContent = randomQuote;
+            
+            if (highScores.length < 5 || score > highScores[highScores.length - 1].score) {
+                const playerName = prompt('A distinguished performance! Please enter your name:', 'Anonymous Connoisseur');
+                if (playerName) {
+                    saveHighScore(playerName, score);
+                }
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (direction !== 'down') nextDirection = 'up';
+                    break;
+                case 'ArrowDown':
+                    if (direction !== 'up') nextDirection = 'down';
+                    break;
+                case 'ArrowLeft':
+                    if (direction !== 'right') nextDirection = 'left';
+                    break;
+                case 'ArrowRight':
+                    if (direction !== 'left') nextDirection = 'right';
+                    break;
+            }
+        });
+
+        function loadHighScores() {
+            const saved = localStorage.getItem('serpentChocolatScores');
+            highScores = saved ? JSON.parse(saved) : [];
+            updateHighScoreDisplay();
+        }
+
+        function saveHighScore(name, score) {
+            highScores.push({ name, score });
+            highScores.sort((a, b) => b.score - a.score);
+            highScores = highScores.slice(0, 5);
+            localStorage.setItem('serpentChocolatScores', JSON.stringify(highScores));
+            updateHighScoreDisplay();
+        }
+
+        function updateHighScoreDisplay() {
+            const scoreList = document.getElementById('scoreList');
+            scoreList.innerHTML = highScores
+                .map(score => `<div>${score.name}: ${score.score}</div>`)
+                .join('');
+        }
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            initGame();
+        }
+    </script>
+</body>
+</html> 
