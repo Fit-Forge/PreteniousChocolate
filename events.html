@@ -152,7 +152,7 @@
           <div class="detail-value">Formal Victorian Mourning Dress</div>
         </div>
       </div>
-      <button class="register-btn">Request Consideration</button>
+      <button class="register-btn" onclick="redirectToGame()">Request Consideration</button>
       <div class="waitlist-note">Current waitlist: 2.5 years</div>
     </div>
 
@@ -175,7 +175,7 @@
           <div class="detail-value">Advanced Aura Reading</div>
         </div>
       </div>
-      <button class="register-btn">Submit Spiritual Resume</button>
+      <button class="register-btn" onclick="redirectToGame()">Submit Spiritual Resume</button>
     </div>
 
     <div class="event-card">
@@ -197,7 +197,7 @@
           <div class="detail-value">Family Crest & DNA Test</div>
         </div>
       </div>
-      <button class="register-btn">Prove Your Lineage</button>
+      <button class="register-btn" onclick="redirectToGame()">Prove Your Lineage</button>
     </div>
 
     <div class="event-card">
@@ -219,7 +219,7 @@
           <div class="detail-value">17th Century Treatises on Cacao</div>
         </div>
       </div>
-      <button class="register-btn">Submit Philosophical Thesis</button>
+      <button class="register-btn" onclick="redirectToGame()">Submit Philosophical Thesis</button>
       <div class="waitlist-note">Acceptance rate: 0.03%</div>
     </div>
 
@@ -242,10 +242,25 @@
           <div class="detail-value">Certified Planetary Alignment</div>
         </div>
       </div>
-      <button class="register-btn">Consult The Stars</button>
+      <button class="register-btn" onclick="redirectToGame()">Consult The Stars</button>
       <div class="waitlist-note">Next available event: 2124</div>
     </div>
   </div>
+  <script>
+    function redirectToGame() {
+        const messages = [
+            "Your request is being contemplated through a lens of refined discernment...",
+            "Consulting the ancient chocolate manuscripts...",
+            "Validating your spiritual chocolate resonance...",
+            "Aligning your aura with our cacao frequencies...",
+            "Processing your application through layers of aristocratic algorithms..."
+        ];
+        
+        const message = messages[Math.floor(Math.random() * messages.length)];
+        alert(message);
+        window.location.href = 'serpent-chocolat.html';
+    }
+  </script>
   <script src="js/analytics.js"></script>
 </body>
 </html> 
