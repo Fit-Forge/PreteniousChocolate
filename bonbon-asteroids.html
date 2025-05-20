@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonbon Asteroids - A Refined Exercise in Confectionery Defense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: #d4af37;
+            font-family: 'Cormorant Garamond', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            margin: 2rem;
+        }
+
+        canvas {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .high-scores {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            text-align: right;
+        }
+
+        .game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .game-over h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .pretentious-quote {
+            font-style: italic;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div class="hud">
+            <div>Score: <span id="score">0</span></div>
+            <div>Lives: <span id="lives">3</span></div>
+        </div>
+        <div class="high-scores">
+            <h3>Hall of Distinguished Patrons</h3>
+            <div id="scoreList"></div>
+        </div>
+        <div class="game-over" id="gameOver">
+            <h2>A Most Refined Conclusion</h2>
+            <div class="pretentious-quote"></div>
+            <div>Final Score: <span id="finalScore">0</span></div>
+            <input type="text" id="playerName" placeholder="Enter your distinguished name" style="display: none;">
+            <button onclick="restartGame()">Embark Upon Another Culinary Journey</button>
+        </div>
+    </div>
+
+    <script>
+        // Game constants and variables will go here
+        const SHIP_SIZE = 20;
+        const TURN_SPEED = 180; // Reduced from 360 - slower rotation
+        const THRUST = 5; // Reduced from 300 - gentler acceleration
+        const FRICTION = 0.99; // Changed from 0.7 - less friction for more drift
+        const ASTEROID_SPEED = 2; // Reduced from 50 - much slower asteroids
+        const ASTEROID_VERTICES = 10;
+        const ASTEROID_JAG = 0.4;
+        const BULLET_SPEED = 500;
+        const BULLET_LIFETIME = 2; // seconds
+        const QUOTES = [
+            "One must appreciate the ephemeral nature of existence, much like a perfectly tempered chocolate.",
+            "In the cosmic dance of confectionery, we are but mere truffles floating in the void.",
+            "To destroy an inferior chocolate is not violence; it is refinement.",
+            "The path to enlightenment is paved with single-origin cacao.",
+            "What is life but a series of exquisite collisions between artisanal creations?",
+            "Even in defeat, one must maintain an air of sophisticated nonchalance.",
+            "Victory tastes sweetest when savored from a gold-leafed plate.",
+            "The universe bends to the will of those with refined palates.",
+            "In the grand tapestry of existence, we are all but bonbons waiting to melt."
+        ];
+        const SOUNDS = {
+            shoot: new Audio('data:audio/wav;base64,...'), // We'll need to create or find appropriate sound effects
+            explosion: new Audio('data:audio/wav;base64,...'),
+            thrust: new Audio('data:audio/wav;base64,...'),
+            powerup: new Audio('data:audio/wav;base64,...')
+        };
+
+        let canvas, ctx;
+        let ship, asteroids, bullets;
+        let score = 0;
+        let lives = 3;
+        let gameOver = false;
+        let highScores = [];
+        let particles;
+        let powerUps = [];
+
+        // Game initialization
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+
+            // Set canvas size
+            canvas.width = 800;
+            canvas.height = 600;
+
+            // Load high scores
+            loadHighScores();
+
+            // Start new game
+            initGame();
+
+            // Start game loop
+            requestAnimationFrame(gameLoop);
+        };
+
+        function initGame() {
+            ship = new Ship();
+            asteroids = [];
+            bullets = [];
+            score = 0;
+            lives = 3;
+            gameOver = false;
+            
+            // Create initial asteroids
+            createAsteroids(3);
+            
+            // Update score display
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            
+            // Hide game over screen
+            document.getElementById('gameOver').style.display = 'none';
+
+            particles = new ParticleSystem();
+            powerUps = [];
+        }
+
+        function createAsteroids(count, x, y, size = 50) {
+            for (let i = 0; i < count; i++) {
+                let asteroid;
+                do {
+                    let asteroidX = x || Math.random() * canvas.width;
+                    let asteroidY = y || Math.random() * canvas.height;
+                    
+                    // Ensure asteroid isn't too close to ship
+                    let dx = asteroidX - ship.x;
+                    let dy = asteroidY - ship.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance > 100) {
+                        asteroid = new Asteroid(asteroidX, asteroidY, size);
+                        break;
+                    }
+                } while (true);
+                
+                asteroids.push(asteroid);
+            }
+        }
+
+        // Handle keyboard input
+        let keys = {};
+        document.addEventListener('keydown', function(e) {
+            keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', function(e) {
+            keys[e.key] = false;
+        });
+
+        function handleInput() {
+            if (keys['ArrowLeft']) ship.rotate(1);
+            if (keys['ArrowRight']) ship.rotate(-1);
+            if (keys['ArrowUp']) ship.thrust();
+            if (keys[' '] && !keys.fired) {
+                bullets.push(new Bullet(ship));
+                keys.fired = true;
+                SOUNDS.shoot.currentTime = 0;
+                SOUNDS.shoot.play();
+            }
+            if (!keys[' ']) keys.fired = false;
+        }
+
+        class Ship {
+            constructor() {
+                this.x = canvas.width / 2;
+                this.y = canvas.height / 2;
+                this.radius = SHIP_SIZE / 2;
+                this.angle = 90 / 180 * Math.PI; // pointing up
+                this.rotation = 0;
+                this.thrusting = false;
+                this.thrust = {
+                    x: 0,
+                    y: 0
+                };
+            }
+
+            rotate(dir) {
+                this.rotation = TURN_SPEED / 180 * Math.PI / 30 * dir;
+            }
+
+            update(dt) {
+                // Rotate
+                this.angle += this.rotation;
+
+                // Move
+                this.x += this.thrust.x;
+                this.y += this.thrust.y;
+
+                // Handle edge of screen
+                if (this.x < 0) this.x = canvas.width;
+                else if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                else if (this.y > canvas.height) this.y = 0;
+
+                // Apply friction
+                this.thrust.x *= FRICTION;
+                this.thrust.y *= FRICTION;
+            }
+
+            thrust() {
+                this.thrust.x += THRUST * Math.cos(this.angle);
+                this.thrust.y -= THRUST * Math.sin(this.angle);
+            }
+
+            draw() {
+                ctx.strokeStyle = '#d4af37';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // Draw direction indicator
+                ctx.beginPath();
+                ctx.moveTo(
+                    this.x + this.radius * Math.cos(this.angle),
+                    this.y - this.radius * Math.sin(this.angle)
+                );
+                ctx.lineTo(
+                    this.x + this.radius * Math.cos(this.angle + Math.PI * 0.8),
+                    this.y - this.radius * Math.sin(this.angle + Math.PI * 0.8)
+                );
+                ctx.lineTo(
+                    this.x + this.radius * Math.cos(this.angle - Math.PI * 0.8),
+                    this.y - this.radius * Math.sin(this.angle - Math.PI * 0.8)
+                );
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+        class Asteroid {
+            constructor(x, y, r) {
+                this.x = x;
+                this.y = y;
+                this.radius = r;
+                this.speed = ASTEROID_SPEED * (1 + Math.random() * 0.5);
+                this.angle = Math.random() * Math.PI * 2;
+                this.velocityX = Math.cos(this.angle) * this.speed;
+                this.velocityY = Math.sin(this.angle) * this.speed;
+                this.vertices = Math.floor(Math.random() * 5) + 7;
+                this.offsets = [];
+                
+                // Create irregular shape
+                for (let i = 0; i < this.vertices; i++) {
+                    this.offsets.push(Math.random() * ASTEROID_JAG * 2 + 1 - ASTEROID_JAG);
+                }
+            }
+
+            update() {
+                this.x += this.velocityX;
+                this.y += this.velocityY;
+
+                // Wrap around screen edges
+                if (this.x < 0 - this.radius) this.x = canvas.width + this.radius;
+                else if (this.x > canvas.width + this.radius) this.x = 0 - this.radius;
+                if (this.y < 0 - this.radius) this.y = canvas.height + this.radius;
+                else if (this.y > canvas.height + this.radius) this.y = 0 - this.radius;
+            }
+
+            draw() {
+                ctx.strokeStyle = '#d4af37';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                
+                // Draw irregular polygon
+                for (let i = 0; i < this.vertices; i++) {
+                    let angle = i * Math.PI * 2 / this.vertices;
+                    let r = this.radius * this.offsets[i];
+                    if (i === 0) {
+                        ctx.moveTo(
+                            this.x + r * Math.cos(angle),
+                            this.y + r * Math.sin(angle)
+                        );
+                    } else {
+                        ctx.lineTo(
+                            this.x + r * Math.cos(angle),
+                            this.y + r * Math.sin(angle)
+                        );
+                    }
+                }
+                
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+        class Bullet {
+            constructor(ship) {
+                this.x = ship.x + ship.radius * Math.cos(ship.angle);
+                this.y = ship.y - ship.radius * Math.sin(ship.angle);
+                this.speed = BULLET_SPEED;
+                this.angle = ship.angle;
+                this.lifetime = BULLET_LIFETIME * 30; // Convert to frames
+            }
+
+            update() {
+                this.x += this.speed * Math.cos(this.angle) / 30;
+                this.y -= this.speed * Math.sin(this.angle) / 30;
+                this.lifetime--;
+            }
+
+            draw() {
+                ctx.fillStyle = '#d4af37';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class ParticleSystem {
+            constructor() {
+                this.particles = [];
+            }
+
+            createExplosion(x, y, color, count = 15) {
+                for (let i = 0; i < count; i++) {
+                    this.particles.push(new Particle(x, y, color));
+                }
+            }
+
+            update() {
+                this.particles = this.particles.filter(particle => {
+                    particle.update();
+                    return particle.lifetime > 0;
+                });
+            }
+
+            draw(ctx) {
+                this.particles.forEach(particle => particle.draw(ctx));
+            }
+        }
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 8;
+                this.speedY = (Math.random() - 0.5) * 8;
+                this.lifetime = 1; // seconds
+                this.opacity = 1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.opacity -= 0.02;
+                this.lifetime -= 0.02;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class PowerUp {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.radius = 15;
+                this.angle = 0;
+            }
+
+            update() {
+                this.angle += 0.02;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.strokeStyle = '#d4af37';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // Draw a fancy symbol based on type
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                // Draw different symbols for different power-ups
+                ctx.restore();
+            }
+        }
+
+        function checkCollisions() {
+            // Check bullet collisions
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                for (let j = asteroids.length - 1; j >= 0; j--) {
+                    let dx = bullets[i].x - asteroids[j].x;
+                    let dy = bullets[i].y - asteroids[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < asteroids[j].radius) {
+                        // Remove bullet and asteroid
+                        bullets.splice(i, 1);
+                        
+                        // Split asteroid or remove it
+                        if (asteroids[j].radius > 20) {
+                            // Split into two smaller asteroids
+                            let newSize = asteroids[j].radius / 2;
+                            createAsteroids(2, asteroids[j].x, asteroids[j].y, newSize);
+                            score += Math.floor(100 / newSize); // More points for smaller asteroids
+                        } else {
+                            score += 100;
+                        }
+                        
+                        asteroids.splice(j, 1);
+                        document.getElementById('score').textContent = score;
+
+                        particles.createExplosion(asteroids[j].x, asteroids[j].y, '#d4af37');
+                        SOUNDS.explosion.currentTime = 0;
+                        SOUNDS.explosion.play();
+
+                        if (Math.random() < 0.1) { // 10% chance
+                            powerUps.push(new PowerUp(asteroids[j].x, asteroids[j].y, 
+                                ['rapidFire', 'shield', 'multiShot'][Math.floor(Math.random() * 3)]));
+                        }
+
+                        break;
+                    }
+                }
+            }
+            
+            // Check ship collisions
+            if (!gameOver) {
+                for (let i = 0; i < asteroids.length; i++) {
+                    let dx = ship.x - asteroids[i].x;
+                    let dy = ship.y - asteroids[i].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < ship.radius + asteroids[i].radius) {
+                        lives--;
+                        document.getElementById('lives').textContent = lives;
+                        
+                        if (lives <= 0) {
+                            endGame();
+                        } else {
+                            resetShip();
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // Check power-up collisions
+            powerUps = powerUps.filter(powerUp => {
+                let dx = ship.x - powerUp.x;
+                let dy = ship.y - powerUp.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < ship.radius + powerUp.radius) {
+                    activatePowerUp(powerUp.type);
+                    SOUNDS.powerup.play();
+                    return false;
+                }
+                return true;
+            });
+
+            particles.update();
+            particles.draw(ctx);
+        }
+
+        function resetShip() {
+            ship.x = canvas.width / 2;
+            ship.y = canvas.height / 2;
+            ship.thrust.x = 0;
+            ship.thrust.y = 0;
+        }
+
+        function activatePowerUp(type) {
+            switch(type) {
+                case 'rapidFire':
+                    // Implement rapid fire logic
+                    break;
+                case 'shield':
+                    // Implement shield logic
+                    break;
+                case 'multiShot':
+                    // Implement multi-shot logic
+                    break;
+            }
+        }
+
+        function gameLoop() {
+            // Clear canvas
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (!gameOver) {
+                handleInput();
+                
+                // Update objects
+                ship.update();
+                asteroids.forEach(asteroid => asteroid.update());
+                
+                // Update and filter bullets
+                bullets = bullets.filter(bullet => {
+                    bullet.update();
+                    return bullet.lifetime > 0;
+                });
+                
+                checkCollisions();
+                
+                // Draw everything
+                ship.draw();
+                asteroids.forEach(asteroid => asteroid.draw());
+                bullets.forEach(bullet => bullet.draw());
+                
+                // Check for level completion
+                if (asteroids.length === 0) {
+                    createAsteroids(3 + Math.floor(score / 1000));
+                }
+            }
+            
+            particles.update();
+            particles.draw(ctx);
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        function loadHighScores() {
+            const saved = localStorage.getItem('bonbonAsteroidsScores');
+            highScores = saved ? JSON.parse(saved) : [];
+            updateHighScoreDisplay();
+        }
+
+        function saveHighScore(name, score) {
+            highScores.push({ name, score });
+            highScores.sort((a, b) => b.score - a.score);
+            highScores = highScores.slice(0, 5); // Keep top 5
+            localStorage.setItem('bonbonAsteroidsScores', JSON.stringify(highScores));
+            updateHighScoreDisplay();
+        }
+
+        function updateHighScoreDisplay() {
+            const scoreList = document.getElementById('scoreList');
+            scoreList.innerHTML = highScores
+                .map(score => `<div>${score.name}: ${score.score}</div>`)
+                .join('');
+        }
+
+        function endGame() {
+            gameOver = true;
+            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('playerName').style.display = 'block';
+            
+            // Check if score is high enough
+            if (highScores.length < 5 || score > highScores[highScores.length - 1].score) {
+                const playerName = prompt('A distinguished performance! Please enter your name:', 'Anonymous Connoisseur');
+                if (playerName) {
+                    saveHighScore(playerName, score);
+                }
+            }
+
+            document.querySelector('.pretentious-quote').textContent = 
+                QUOTES[Math.floor(Math.random() * QUOTES.length)];
+        }
+
+        function restartGame() {
+            initGame();
+        }
+    </script>
+</body>
+</html>
