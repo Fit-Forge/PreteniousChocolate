@@ -565,17 +565,27 @@
         }
 
         function endGame() {
+            if (gameOver) return; // Prevent multiple calls
+            
             gameOver = true;
             clearInterval(gameLoop);
-            SOUNDS.gameOver.play();
             
-            document.getElementById('gameOver').style.display = 'block';
+            // Stop any ongoing animations/updates
+            if (particles) {
+                particles.particles = [];
+            }
+            
+            // Show game over screen
+            const gameOverScreen = document.getElementById('gameOver');
+            gameOverScreen.style.display = 'block';
             document.getElementById('finalScore').textContent = score;
             document.getElementById('finalLength').textContent = snake.length;
             
+            // Show random quote
             const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
             document.querySelector('.pretentious-quote').textContent = randomQuote;
             
+            // Handle high score
             if (highScores.length < 5 || score > highScores[highScores.length - 1].score) {
                 const playerName = prompt('A most distinguished performance! Please enter your name:', 'Anonymous Connoisseur');
                 if (playerName) {
@@ -583,10 +593,24 @@
                 }
             }
 
-            // Redirect after 3 seconds
-            setTimeout(() => {
-                window.location.href = 'main.html';
-            }, 3000);
+            // Draw final state
+            draw();
+            
+            // Add a countdown message
+            const countdownDiv = document.createElement('div');
+            countdownDiv.style.marginTop = '1rem';
+            countdownDiv.style.fontStyle = 'italic';
+            gameOverScreen.appendChild(countdownDiv);
+            
+            let countdown = 3;
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownDiv.textContent = `Returning to collection in ${countdown}...`;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = 'main.html';
+                }
+            }, 1000);
         }
 
         function restartGame() {
