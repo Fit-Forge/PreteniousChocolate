@@ -131,6 +131,31 @@
             background: rgba(212, 175, 55, 0.1);
             transform: translateX(-50%) translateY(-2px);
         }
+
+        .touch-controls {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .touch-btn {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .touch-controls {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
@@ -162,12 +187,28 @@
             Use arrow keys or swipe to guide your tasting journey
         </div>
         <button onclick="startGame()">Begin Tasting</button>
+        <select id="difficulty" class="difficulty-select">
+            <option value="leisurely">Leisurely Tasting</option>
+            <option value="refined">Refined Pace</option>
+            <option value="virtuoso">Chocolate Virtuoso</option>
+        </select>
+    </div>
+
+    <div class="touch-controls">
+        <button class="touch-btn up">↑</button>
+        <div class="touch-row">
+            <button class="touch-btn left">←</button>
+            <button class="touch-btn right">→</button>
+        </div>
+        <button class="touch-btn down">↓</button>
     </div>
 
     <script>
         const GRID_SIZE = 20;
         const CELL_SIZE = 25;
         const INITIAL_SPEED = 150; // ms per move
+        const SPEED_INCREASE = 0.95; // Speed multiplier per 100 points
+        const MIN_SPEED = 50; // Fastest possible speed in ms
         
         const QUOTES = [
             "One must savor life's refined moments with the utmost deliberation",
@@ -216,6 +257,29 @@
             }
         ];
 
+        const POWER_UPS = [
+            {
+                name: 'Time Dilation',
+                effect: 'slow',
+                duration: 5000,
+                color: '#00ffff',
+                description: 'A temporal anomaly slows the flow of time'
+            },
+            {
+                name: 'Phase Shift',
+                effect: 'ghost',
+                duration: 3000,
+                color: '#ff00ff',
+                description: 'Quantum tunneling allows passing through oneself'
+            }
+        ];
+
+        const DIFFICULTY_SETTINGS = {
+            leisurely: { speed: 200, minDistance: 4 },
+            refined: { speed: 150, minDistance: 3 },
+            virtuoso: { speed: 100, minDistance: 2 }
+        };
+
         let canvas, ctx;
         let snake = [];
         let direction = 'right';
@@ -226,6 +290,7 @@
         let gameOver = false;
         let particles;
         let highScores = [];
+        let isPaused = false;
 
         const SOUNDS = {
             collect: new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjIwLjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEAAABVgANTU1NTU1Q0NDQ0NDUFBQUFBQXl5eXl5ea2tra2tra3l5eXl5eYaGhoaGhpSUlJSUlKGhoaGhoaGvr6+vr6+8vLy8vLzKysrKysrX19fX19fX5eXl5eXl8vLy8vLy////////////AAAAAExhdmM1OC4yNwAAAAAAAAAAAAAAACQCgAAAAAAAAAVY82AhbwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+MYxAALACwAAP/AADwQKVE9YWDGPkQWpT66yk4+zIiYPoTUaT3tnU+NFRUWQKXjaEwdLqLzR0ymNrZTadF1MpmMqlE5HhYoGjx+NCJChxMVDESeKnCxXLFIxUnBwXJwVDxU/+MYxA8L0DU0AP+0ANkVHz0aNCyQCWR3IqKiwkuF5iIuMKxcYVBwVCAyKjwqRJwVKkSIVCYRGShERkQWC4QGChMip0KgQIECBAgMEBgoQGCAgKnCwWGCAwQGCAyKn/8YxBQJwAE0AAP8AAI0FQuCgyVPLFQYWE0YVBITBUPDwsHxgaHB0lC0vBgoHQgKiwkHhAYIDAoFAgMDggIEBgUGBQUGBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUF/+MYxDUJyAEYAP8AABQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU/+MYxPQJwAEQAAP8AAQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU")
@@ -327,6 +392,14 @@
                 SOUNDS.collect.play();
                 
                 placeFood();
+
+                // Increase speed based on score
+                const newSpeed = Math.max(
+                    MIN_SPEED,
+                    INITIAL_SPEED * Math.pow(SPEED_INCREASE, Math.floor(score/100))
+                );
+                clearInterval(gameLoop);
+                gameLoop = setInterval(update, newSpeed);
             } else {
                 snake.pop();
             }
@@ -362,15 +435,37 @@
             );
             ctx.fill();
 
+            // Add trail particles behind snake head
+            if (!gameOver) {
+                const head = snake[0];
+                particles.createTrail(
+                    head.x * CELL_SIZE + CELL_SIZE/2,
+                    head.y * CELL_SIZE + CELL_SIZE/2,
+                    'rgba(212, 175, 55, 0.3)'
+                );
+            }
+
             particles.update();
             particles.draw(ctx);
         }
 
         function placeFood() {
-            // Get all possible positions
+            // Get all possible positions that aren't too close to snake
             let possiblePositions = [];
-            for (let x = 0; x < GRID_SIZE; x++) {
-                for (let y = 0; y < GRID_SIZE; y++) {
+            
+            // Try to place food in each quadrant of the grid
+            const quadrants = [
+                {startX: 0, endX: GRID_SIZE/2, startY: 0, endY: GRID_SIZE/2},           // top-left
+                {startX: GRID_SIZE/2, endX: GRID_SIZE, startY: 0, endY: GRID_SIZE/2},   // top-right
+                {startX: 0, endX: GRID_SIZE/2, startY: GRID_SIZE/2, endY: GRID_SIZE},   // bottom-left
+                {startX: GRID_SIZE/2, endX: GRID_SIZE, startY: GRID_SIZE/2, endY: GRID_SIZE} // bottom-right
+            ];
+
+            // Pick a random quadrant for variety
+            const quadrant = quadrants[Math.floor(Math.random() * quadrants.length)];
+            
+            for (let x = quadrant.startX; x < quadrant.endX; x++) {
+                for (let y = quadrant.startY; y < quadrant.endY; y++) {
                     // Check if position is not occupied by snake
                     if (!snake.some(segment => segment.x === x && segment.y === y)) {
                         // Check if position is not too close to snake head
@@ -383,14 +478,23 @@
                 }
             }
 
-            // If no valid positions found, just use any non-snake position
+            // If no valid positions in chosen quadrant, try all positions
             if (possiblePositions.length === 0) {
-                possiblePositions = Array.from({length: GRID_SIZE * GRID_SIZE}, (_, i) => ({
-                    x: Math.floor(i / GRID_SIZE),
-                    y: i % GRID_SIZE
-                })).filter(pos => !snake.some(segment => 
-                    segment.x === pos.x && segment.y === pos.y
-                ));
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    for (let y = 0; y < GRID_SIZE; y++) {
+                        if (!snake.some(segment => segment.x === x && segment.y === y)) {
+                            possiblePositions.push({x, y});
+                        }
+                    }
+                }
+            }
+
+            // If still no valid positions, use emergency placement
+            if (possiblePositions.length === 0) {
+                possiblePositions = [{
+                    x: Math.floor(Math.random() * GRID_SIZE),
+                    y: Math.floor(Math.random() * GRID_SIZE)
+                }];
             }
 
             // Select random position from possible positions
@@ -401,6 +505,15 @@
                 ...position,
                 ...INGREDIENTS[Math.floor(Math.random() * INGREDIENTS.length)]
             };
+
+            // Add power-up spawn logic
+            if (Math.random() < 0.1) { // 10% chance of power-up
+                const powerUp = POWER_UPS[Math.floor(Math.random() * POWER_UPS.length)];
+                food.isPowerUp = true;
+                food.effect = powerUp.effect;
+                food.duration = powerUp.duration;
+                food.color = powerUp.color;
+            }
         }
 
         function showDescription(text) {
@@ -447,6 +560,20 @@
                     break;
                 case 'ArrowRight':
                     if (direction !== 'left') nextDirection = 'right';
+                    break;
+                case 'Escape':
+                    isPaused = !isPaused;
+                    if (isPaused) {
+                        clearInterval(gameLoop);
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#d4af37';
+                        ctx.font = '2rem "Cormorant Garamond"';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('Paused', canvas.width/2, canvas.height/2);
+                    } else {
+                        gameLoop = setInterval(update, INITIAL_SPEED);
+                    }
                     break;
             }
         });
