@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocolatier's Tower Defense - A Refined Strategy</title>
+    <style>
+        body {
+            background: black;
+            color: #d4af37;
+            font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .game-container {
+            position: relative;
+            width: 800px;
+            margin: 0 auto;
+        }
+
+        canvas {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .tower-selection {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .tower-option {
+            padding: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tower-option:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .wave-control {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        .wave-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .wave-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .wave-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wave-info {
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        /* Tower colors */
+        .tower-option[data-tower="truffle"] {
+            background: rgba(75, 0, 130, 0.2);
+            border-color: rgba(75, 0, 130, 0.5);
+        }
+
+        .tower-option[data-tower="praline"] {
+            background: rgba(139, 69, 19, 0.2);
+            border-color: rgba(139, 69, 19, 0.5);
+        }
+
+        .tower-option[data-tower="bonbon"] {
+            background: rgba(210, 105, 30, 0.2);
+            border-color: rgba(210, 105, 30, 0.5);
+        }
+
+        .tower-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .description {
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* Tower info panel styling */
+        .tower-info {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .tower-stats {
+            font-family: 'Cormorant Garamond', serif;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .upgrade-btn, .special-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upgrade-btn:hover, .special-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .return-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .return-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .cost {
+            margin-top: 0.3rem;
+            font-style: normal;
+            color: #d4af37;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Make tower options unselectable when can't afford them */
+        .tower-option.cannot-afford {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tower-option.cannot-afford:hover {
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <button onclick="window.location.href='main.html'" class="return-btn">
+            Return to Collection
+        </button>
+        <canvas id="gameCanvas"></canvas>
+        <div class="tower-selection">
+            <div class="tower-option" data-tower="truffle">
+                Truffle Guardian
+                <div class="description">
+                    Launches ganache projectiles
+                    <div class="cost">120 gold</div>
+                </div>
+            </div>
+            <div class="tower-option" data-tower="praline">
+                Praline Sentinel
+                <div class="description">
+                    Area-of-effect chocolate spray
+                    <div class="cost">150 gold</div>
+                </div>
+            </div>
+            <div class="tower-option" data-tower="bonbon">
+                Bonbon Defender
+                <div class="description">
+                    Rapid-fire cocoa beans
+                    <div class="cost">180 gold</div>
+                </div>
+            </div>
+        </div>
+        <div class="wave-control">
+            <button id="nextWaveBtn" class="wave-btn" onclick="startNextWave()">
+                Summon Next Wave
+            </button>
+            <div class="wave-info">Wave: <span id="waveCounter">0</span></div>
+        </div>
+        <div class="tower-info" style="display: none;">
+            <h3>Tower Info</h3>
+            <div class="tower-stats"></div>
+            <button onclick="upgradeTower()" class="upgrade-btn">Upgrade</button>
+            <button onclick="useSpecial()" class="special-btn">Special Ability</button>
+        </div>
+    </div>
+
+    <script>
+        class Tower {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.range = 100;
+                this.damage = 10;
+                this.attackSpeed = 1;
+                this.lastAttack = 0;
+                this.level = 0;
+                this.specialReady = true;
+                this.specialCooldown = 10000; // 10 seconds
+                this.lastSpecial = 0;
+                
+                // Different properties based on tower type
+                switch(type) {
+                    case 'truffle':
+                        this.range = 150;
+                        this.damage = 25;
+                        this.attackSpeed = 1.5;
+                        break;
+                    case 'praline':
+                        this.range = 80;
+                        this.damage = 18;
+                        this.attackSpeed = 0.8;
+                        break;
+                    case 'bonbon':
+                        this.range = 120;
+                        this.damage = 10;
+                        this.attackSpeed = 0.3;
+                        break;
+                }
+            }
+
+            upgrade() {
+                if (this.level >= UPGRADE_PATHS[this.type].length) return false;
+                
+                const upgrade = UPGRADE_PATHS[this.type][this.level];
+                if (gold >= upgrade.cost) {
+                    gold -= upgrade.cost;
+                    this.damage = upgrade.damage;
+                    this.range = upgrade.range;
+                    this.level++;
+                    SOUNDS.upgrade.play();
+                    return true;
+                }
+                return false;
+            }
+
+            useSpecial(enemies) {
+                if (!this.specialReady) return;
+                
+                const now = Date.now();
+                if (now - this.lastSpecial < this.specialCooldown) return;
+
+                SOUNDS.special.play();
+                
+                switch(this.type) {
+                    case 'truffle':
+                        // Area stun
+                        enemies.forEach(enemy => {
+                            if (this.inRange(enemy)) {
+                                enemy.stunned = true;
+                                setTimeout(() => enemy.stunned = false, 3000);
+                            }
+                        });
+                        break;
+                    case 'praline':
+                        // Damage amplification
+                        enemies.forEach(enemy => {
+                            if (this.inRange(enemy)) {
+                                enemy.damageMultiplier = 2;
+                                setTimeout(() => enemy.damageMultiplier = 1, 5000);
+                            }
+                        });
+                        break;
+                    case 'bonbon':
+                        // Rapid fire mode
+                        const originalSpeed = this.attackSpeed;
+                        this.attackSpeed *= 0.3;
+                        setTimeout(() => this.attackSpeed = originalSpeed, 4000);
+                        break;
+                }
+
+                this.lastSpecial = now;
+            }
+
+            attack(enemies) {
+                const now = Date.now();
+                if (now - this.lastAttack < this.attackSpeed * 1000) return;
+
+                const inRange = enemies.filter(enemy => {
+                    const dx = enemy.x - this.x;
+                    const dy = enemy.y - this.y;
+                    return Math.sqrt(dx * dx + dy * dy) <= this.range;
+                });
+
+                if (inRange.length > 0) {
+                    switch(this.type) {
+                        case 'truffle':
+                            inRange[0].takeDamage(this.damage, this.type);
+                            break;
+                        case 'praline':
+                            inRange.forEach(enemy => enemy.takeDamage(this.damage, this.type));
+                            break;
+                        case 'bonbon':
+                            inRange[0].takeDamage(this.damage, this.type);
+                            break;
+                    }
+                    this.lastAttack = now;
+
+                    // Add particle effects
+                    particles.createProjectile(
+                        this.x, this.y,
+                        inRange[0].x, inRange[0].y,
+                        this.type === 'truffle' ? '#4B0082' :
+                        this.type === 'praline' ? '#8B4513' : '#D2691E'
+                    );
+                }
+            }
+        }
+
+        class Enemy {
+            constructor(path) {
+                this.path = path;
+                this.pathIndex = 0;
+                this.x = path[0].x;
+                this.y = path[0].y;
+                this.health = 100;
+                this.speed = 1;
+                const type = this.randomType();
+                Object.assign(this, ENEMY_TYPES[type]);
+                this.stunned = false;
+                this.damageMultiplier = 1;
+            }
+
+            randomType() {
+                const types = ['mass-market-consumer', 'chocolate-philistine', 'flavor-philistine'];
+                return types[Math.floor(Math.random() * types.length)];
+            }
+
+            move() {
+                if (this.stunned) return false;
+                const target = this.path[this.pathIndex];
+                const dx = target.x - this.x;
+                const dy = target.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < this.speed) {
+                    this.pathIndex++;
+                    if (this.pathIndex >= this.path.length) {
+                        return true; // Reached end
+                    }
+                } else {
+                    this.x += (dx / dist) * this.speed;
+                    this.y += (dy / dist) * this.speed;
+                }
+                return false;
+            }
+
+            takeDamage(amount, towerType) {
+                if (this.resistance === towerType) {
+                    amount *= 0.5;
+                }
+                amount *= this.damageMultiplier;
+                this.health -= amount;
+                
+                if (this.health <= 0) {
+                    SOUNDS.enemyDeath.play();
+                    particles.createExplosion(this.x, this.y, this.color);
+                    
+                    // Sometimes show a defeat quote
+                    if (Math.random() < 0.2) { // 20% chance
+                        const quote = DEFEAT_QUOTES[Math.floor(Math.random() * DEFEAT_QUOTES.length)];
+                        
+                        // Save current context state
+                        ctx.save();
+                        
+                        // Set up text rendering
+                        ctx.textAlign = 'center';
+                        ctx.font = 'italic 16px "Cormorant Garamond"';
+                        
+                        // Draw text shadow/outline
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                        ctx.fillText(quote, this.x, this.y - 30);
+                        
+                        // Draw main text
+                        ctx.fillStyle = 'rgba(212, 175, 55, 0.9)';
+                        ctx.fillText(quote, this.x, this.y - 30);
+                        
+                        // Restore context state
+                        ctx.restore();
+                    }
+                }
+            }
+        }
+
+        // Game constants
+        const CANVAS_WIDTH = 800;
+        const CANVAS_HEIGHT = 600;
+        const GRID_SIZE = 40;
+        const WAVE_DELAY = 30; // seconds between waves
+
+        // Game state
+        let canvas, ctx;
+        let towers = [];
+        let enemies = [];
+        let selectedTower = null;
+        let gold = 250;
+        let lives = 20;
+        let wave = 0;
+        let waveStartTime = 0;
+        let gameOver = false;
+        let particles;
+        let selectedTowerInstance = null;
+        let waveInProgress = false;
+        let autoStartWaves = false;
+        let floatingTexts = [];
+
+        // Path that enemies will follow
+        const PATH = [
+            {x: 0, y: 300},
+            {x: 200, y: 300},
+            {x: 200, y: 100},
+            {x: 400, y: 100},
+            {x: 400, y: 500},
+            {x: 600, y: 500},
+            {x: 600, y: 300},
+            {x: 800, y: 300}
+        ];
+
+        // Tower costs and stats
+        const TOWER_COSTS = {
+            truffle: 120,
+            praline: 150,
+            bonbon: 180
+        };
+
+        // Sound effects
+        const SOUNDS = {
+            place: { play: () => {} },
+            attack: { play: () => {} },
+            enemyDeath: { play: () => {} },
+            upgrade: { play: () => {} },
+            special: { play: () => {} }
+        };
+
+        // Enemy types with unique properties
+        const ENEMY_TYPES = {
+            'mass-market-consumer': {
+                health: 60,
+                speed: 0.8,
+                resistance: null,
+                color: '#8B0000',
+                worth: 15
+            },
+            'chocolate-philistine': {
+                health: 120,
+                speed: 0.5,
+                resistance: 'truffle',
+                color: '#800000',
+                worth: 25
+            },
+            'flavor-philistine': {
+                health: 90,
+                speed: 1,
+                resistance: 'praline',
+                color: '#A52A2A',
+                worth: 20
+            },
+            'dessert-critic': {
+                health: 180,
+                speed: 0.4,
+                resistance: 'bonbon',
+                color: '#8B4513',
+                worth: 35
+            }
+        };
+
+        // Tower upgrade paths
+        const UPGRADE_PATHS = {
+            truffle: [
+                { name: 'Dark Chocolate', cost: 200, damage: 30, range: 170 },
+                { name: 'Single Origin', cost: 350, damage: 45, range: 190 }
+            ],
+            praline: [
+                { name: 'Hazelnut Infused', cost: 250, damage: 20, range: 100 },
+                { name: 'Gold Dusted', cost: 400, damage: 30, range: 120 }
+            ],
+            bonbon: [
+                { name: 'Artisanal', cost: 300, damage: 12, range: 140 },
+                { name: 'Grand Cru', cost: 450, damage: 18, range: 160 }
+            ]
+        };
+
+        // Expand the constants section with more themed content
+        const INGREDIENT_CATEGORIES = {
+            spices: [
+                "Iranian saffron threads",
+                "Tahitian vanilla beans",
+                "Vietnamese cinnamon bark",
+                "Rare Tonka beans",
+                "Japanese matcha powder",
+                "Cardamom from Kerala"
+            ],
+            chocolates: [
+                "Single-origin Ecuadorian cacao",
+                "Venezuelan Criollo beans",
+                "French Valrhona grand cru",
+                "Peruvian ceremonial cacao",
+                "Belgian couverture chocolate",
+                "Madagascan dark chocolate"
+            ],
+            garnishes: [
+                "24-karat gold leaf flakes",
+                "Tahitian pearl dust",
+                "Bulgarian rose petals",
+                "Hand-harvested lavender",
+                "Crystallized violet petals",
+                "Sicilian pistachios"
+            ],
+            rarities: [
+                "Himalayan pink salt crystals",
+                "Vintage champagne essence",
+                "Swiss mountain honey",
+                "Corsican immortelle flowers",
+                "Alba white truffle powder",
+                "Moroccan desert rose crystals"
+            ]
+        };
+
+        // Add more pretentious wave completion quotes
+        const WAVE_QUOTES = [
+            "Your defense of our artisanal ingredients was... adequate.",
+            "The philistines retreat before our refined resistance.",
+            "Another triumph for sophisticated confectionery.",
+            "Our chocolate sanctum remains untainted by mediocrity.",
+            "The masses clearly cannot appreciate our elevated tastes.",
+            "Our ingredients remain as exclusive as our clientele.",
+            "Even the gods themselves would weep at our creations.",
+            "The peasants dare not approach our pantheon of flavors.",
+            "Your dedication to confectionery excellence is... noted.",
+            "Our chocolate shall not be debased by common palates."
+        ];
+
+        // Add enemy defeat quotes
+        const DEFEAT_QUOTES = [
+            "Return to your mass-produced mediocrity!",
+            "Back to the bargain bin with you!",
+            "Our standards remain uncompromised.",
+            "Quality will always triumph over quantity.",
+            "Another philistine falls before fine taste.",
+            "Your palate needs refinement.",
+            "How pedestrian.",
+            "Begone, chocolate charlatan!",
+            "Your taste is beneath us.",
+            "Such common confectionery.",
+            "Away with your artificial flavors!",
+            "Not worthy of our artisanal essence.",
+            "Return to your commercial cocoa!",
+            "Your sweetness lacks sophistication.",
+            "Subpar sugary simpleton!",
+            
+            // New quotes
+            "Your chocolate credentials are revoked!",
+            "Back to culinary school with you!",
+            "Our truffles reject your existence.",
+            "Taste the wrath of fine cacao!",
+            "Your palate is painfully provincial.",
+            "Banished from our chocolate sanctuary!",
+            "Our ganache finds you wanting.",
+            "Unworthy of our cocoa percentage!",
+            "Return to your grocery store chocolate!",
+            "Your flavor profile offends us.",
+            "Beneath our bean-to-bar standards!",
+            "Our pralines protest your presence.",
+            "Taste true terroir, plebeian!",
+            "Your chocolate knowledge is lacking.",
+            "Unfit for our flavor notes!",
+            "Our conching process rejects you.",
+            "Tempering reveals your true nature!",
+            "Begone, bulk chocolate consumer!",
+            "Your cocoa butter is counterfeit!",
+            "Our origin story ends your chapter!"
+        ];
+
+        // Particle system
+        class ParticleSystem {
+            constructor() {
+                this.particles = [];
+            }
+
+            createExplosion(x, y, color) {
+                for (let i = 0; i < 8; i++) {
+                    this.particles.push({
+                        x, y,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: (Math.random() - 0.5) * 4,
+                        life: 1,
+                        color
+                    });
+                }
+            }
+
+            createProjectile(startX, startY, targetX, targetY, color) {
+                // Create trail particles
+                for (let i = 0; i < 3; i++) {
+                    this.particles.push({
+                        x: startX,
+                        y: startY,
+                        targetX,
+                        targetY,
+                        progress: 0,
+                        color,
+                        trail: true,
+                        offset: i * 0.1
+                    });
+                }
+            }
+
+            update() {
+                this.particles = this.particles.filter(p => {
+                    if (p.targetX !== undefined) {
+                        // Projectile
+                        p.progress += 0.1;
+                        p.x = p.x + (p.targetX - p.x) * p.progress;
+                        p.y = p.y + (p.targetY - p.y) * p.progress;
+                        return p.progress < 1;
+                    } else {
+                        // Explosion
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.life -= 0.02;
+                        return p.life > 0;
+                    }
+                });
+            }
+
+            draw(ctx) {
+                this.particles.forEach(p => {
+                    ctx.save();
+                    if (p.targetX !== undefined) {
+                        // Projectile trail effect
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = p.color;
+                        ctx.globalAlpha = 0.6 - p.progress;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p.x + p.vx * 5, p.y + p.vy * 5);
+                        ctx.strokeStyle = p.color;
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+                    } else {
+                        // Explosion particle with glow
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = p.color;
+                        ctx.globalAlpha = p.life;
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                });
+            }
+        }
+
+        // Modify the FloatingText class
+        class FloatingText {
+            constructor(x, y, text, color = 'rgba(212, 175, 55, 0.9)') {
+                this.x = canvas.width / 2; // Center horizontally
+                this.y = canvas.height - 80; // Near bottom of canvas, slightly higher
+                this.text = text;
+                this.color = color;
+                this.life = 1;
+                this.velocity = -0.2; // Even slower upward movement
+                this.fadeRate = 0.005; // Much slower fade (1/0.005 = 200 frames ≈ 3.3 seconds)
+                this.scale = 1;
+                this.baseSize = 18; // Larger base font size (was 14)
+                this.createdAt = Date.now();
+                this.minDisplayTime = 3000; // Minimum 3 seconds display time
+            }
+
+            update() {
+                // Don't start fading until minimum time has passed
+                if (Date.now() - this.createdAt > this.minDisplayTime) {
+                    this.life -= this.fadeRate;
+                }
+                
+                this.y += this.velocity;
+                this.scale = 1 + (1 - this.life) * 0.1; // Gentler scale effect
+                return this.life > 0;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // Enhanced text shadow for better visibility
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+                
+                // Larger scaled text
+                const fontSize = this.baseSize * this.scale;
+                ctx.font = `italic ${fontSize}px "Cormorant Garamond"`;
+                ctx.fillText(this.text, this.x, this.y);
+                
+                // Add a subtle glow effect
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.fillText(this.text, this.x, this.y);
+                
+                ctx.restore();
+            }
+        }
+
+        // Initialize game
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = CANVAS_WIDTH;
+            canvas.height = CANVAS_HEIGHT;
+            
+            // Initialize particle system
+            particles = new ParticleSystem();
+
+            // Add event listeners
+            canvas.addEventListener('click', handleCanvasClick);
+            document.querySelectorAll('.tower-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedTower = option.dataset.tower;
+                });
+            });
+
+            // Start game loop
+            requestAnimationFrame(gameLoop);
+            
+            document.getElementById('waveCounter').textContent = wave;
+            
+            // Start first wave automatically
+            startNextWave();
+        };
+
+        function startNextWave() {
+            if (waveInProgress) return;
+            
+            wave++;
+            document.getElementById('waveCounter').textContent = wave;
+            waveStartTime = Date.now();
+            waveInProgress = true;
+            
+            const nextWaveBtn = document.getElementById('nextWaveBtn');
+            nextWaveBtn.disabled = true;
+            
+            spawnEnemies();
+        }
+
+        function checkWaveComplete() {
+            if (waveInProgress && enemies.length === 0) {
+                waveInProgress = false;
+                const nextWaveBtn = document.getElementById('nextWaveBtn');
+                nextWaveBtn.disabled = false;
+                
+                // Calculate rewards
+                const waveBonus = 50 + Math.floor(wave * 10);
+                gold += waveBonus;
+                
+                // Select ingredients from different categories
+                const savedIngredients = [];
+                const categories = Object.keys(INGREDIENT_CATEGORIES);
+                
+                // Get one ingredient from each category
+                categories.forEach(category => {
+                    const categoryItems = INGREDIENT_CATEGORIES[category];
+                    const randomItem = categoryItems[Math.floor(Math.random() * categoryItems.length)];
+                    savedIngredients.push({
+                        category: category.charAt(0).toUpperCase() + category.slice(1),
+                        item: randomItem
+                    });
+                });
+                
+                // Select random quote
+                const quote = WAVE_QUOTES[Math.floor(Math.random() * WAVE_QUOTES.length)];
+                
+                // Clear any existing intervals
+                if (window.fadeInterval) clearInterval(window.fadeInterval);
+                
+                // Show completion message with fancy fade-in
+                let opacity = 0;
+                window.fadeInterval = setInterval(() => {
+                    // Clear the entire canvas first
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw game elements
+                    drawGrid();
+                    drawPath();
+                    drawTowers();
+                    drawEnemies();
+                    
+                    opacity = Math.min(opacity + 0.05, 1);
+                    
+                    // Draw the message overlay
+                    ctx.save();
+                    
+                    // Semi-transparent background
+                    ctx.fillStyle = `rgba(0, 0, 0, ${opacity * 0.95})`;
+                    ctx.fillRect(canvas.width/4, canvas.height/4, canvas.width/2, canvas.height/2);
+                    
+                    // Text settings
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#d4af37';
+                    ctx.fillStyle = `rgba(212, 175, 55, ${opacity})`;
+                    
+                    // Draw all text elements
+                    ctx.font = 'bold 32px "Cormorant Garamond"';
+                    ctx.fillText(`Wave ${wave} Completed`, canvas.width/2, canvas.height/2 - 100);
+                    
+                    ctx.font = 'italic 24px "Cormorant Garamond"';
+                    ctx.fillText(quote, canvas.width/2, canvas.height/2 - 60);
+                    
+                    ctx.font = '24px "Cormorant Garamond"';
+                    ctx.fillText(`${waveBonus} gold acquired`, canvas.width/2, canvas.height/2 - 20);
+                    
+                    ctx.font = 'bold italic 20px "Cormorant Garamond"';
+                    ctx.fillText('Ingredients Preserved:', canvas.width/2, canvas.height/2 + 20);
+                    
+                    savedIngredients.forEach((ingredient, idx) => {
+                        const yPos = canvas.height/2 + 50 + idx * 30;
+                        ctx.font = 'italic 16px "Cormorant Garamond"';
+                        ctx.fillText(`${ingredient.category}:`, canvas.width/2 - 100, yPos);
+                        ctx.font = '18px "Cormorant Garamond"';
+                        ctx.fillText(ingredient.item, canvas.width/2 + 50, yPos);
+                    });
+                    
+                    ctx.restore();
+                    
+                    if (opacity >= 1) {
+                        clearInterval(window.fadeInterval);
+                    }
+                }, 50);
+            }
+        }
+
+        function spawnEnemies() {
+            const baseCount = 3;
+            const count = Math.floor(baseCount + wave * 1.1); // Reduced from 1.2
+            let spawned = 0;
+            
+            const spawnDelay = Math.max(1500 - wave * 75, 800); // Reduced speed increase
+            
+            // More gradual stat scaling
+            const waveScaling = 1 + (wave - 1) * 0.12; // Reduced from 0.15
+            
+            const spawnInterval = setInterval(() => {
+                if (spawned >= count || gameOver) {
+                    clearInterval(spawnInterval);
+                    return;
+                }
+                
+                const enemy = new Enemy(PATH);
+                enemy.health *= waveScaling;
+                enemy.worth = Math.floor(enemy.worth * (1 + (wave - 1) * 0.08)); // Reduced gold scaling
+                enemies.push(enemy);
+                spawned++;
+            }, spawnDelay);
+        }
+
+        function handleCanvasClick(e) {
+            if (!selectedTower || gameOver) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Snap to grid
+            const gridX = Math.floor(x / GRID_SIZE) * GRID_SIZE + GRID_SIZE/2;
+            const gridY = Math.floor(y / GRID_SIZE) * GRID_SIZE + GRID_SIZE/2;
+
+            // Check if we can afford it
+            if (gold >= TOWER_COSTS[selectedTower]) {
+                // Check if space is empty
+                const canPlace = !towers.some(tower => 
+                    tower.x === gridX && tower.y === gridY
+                );
+
+                // Check if not on path
+                const onPath = PATH.some(point => {
+                    const dx = point.x - gridX;
+                    const dy = point.y - gridY;
+                    return Math.sqrt(dx * dx + dy * dy) < GRID_SIZE;
+                });
+
+                if (canPlace && !onPath) {
+                    towers.push(new Tower(gridX, gridY, selectedTower));
+                    gold -= TOWER_COSTS[selectedTower];
+                    SOUNDS.place.play();
+                    selectedTower = null;
+                }
+            }
+        }
+
+        function drawPath() {
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+            ctx.lineWidth = GRID_SIZE * 0.8;
+            ctx.beginPath();
+            ctx.moveTo(PATH[0].x, PATH[0].y);
+            PATH.forEach(point => ctx.lineTo(point.x, point.y));
+            ctx.stroke();
+
+            // Draw decorative edges
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(PATH[0].x, PATH[0].y);
+            PATH.forEach(point => ctx.lineTo(point.x, point.y));
+            ctx.stroke();
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+            ctx.lineWidth = 1;
+
+            for (let x = 0; x < canvas.width; x += GRID_SIZE) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            for (let y = 0; y < canvas.height; y += GRID_SIZE) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawTowers() {
+            towers.forEach(tower => {
+                // Base glow
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = tower.type === 'truffle' ? '#4B0082' :
+                                 tower.type === 'praline' ? '#8B4513' : '#D2691E';
+
+                // Tower base
+                ctx.fillStyle = tower.type === 'truffle' ? '#4B0082' :
+                               tower.type === 'praline' ? '#8B4513' : '#D2691E';
+                ctx.beginPath();
+                ctx.arc(tower.x, tower.y, GRID_SIZE/3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Tower detail
+                ctx.strokeStyle = '#d4af37';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(tower.x, tower.y, GRID_SIZE/4, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Range indicator
+                if (selectedTowerInstance === tower || selectedTower) {
+                    ctx.shadowBlur = 0;
+                    ctx.strokeStyle = 'rgba(212, 175, 55, 0.2)';
+                    ctx.beginPath();
+                    ctx.arc(tower.x, tower.y, tower.range, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    // Range circle animation
+                    const time = Date.now() * 0.001;
+                    ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+                    ctx.beginPath();
+                    ctx.arc(tower.x, tower.y, tower.range * (0.8 + Math.sin(time) * 0.2), 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        function drawEnemies() {
+            enemies.forEach(enemy => {
+                // Enemy glow
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = enemy.color;
+
+                // Enemy body
+                ctx.fillStyle = enemy.color;
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, GRID_SIZE/4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Health bar background
+                ctx.shadowBlur = 0;
+                const healthWidth = GRID_SIZE/2;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(enemy.x - healthWidth/2, enemy.y - GRID_SIZE/2 - 2, healthWidth, 6);
+
+                // Health bar
+                const currentHealth = (healthWidth * enemy.health) / 100;
+                ctx.fillStyle = enemy.health > 50 ? '#4CAF50' : 
+                               enemy.health > 25 ? '#FFC107' : '#F44336';
+                ctx.fillRect(enemy.x - healthWidth/2, enemy.y - GRID_SIZE/2 - 2, currentHealth, 6);
+            });
+        }
+
+        function drawUI() {
+            // Reset text alignment for UI elements
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '20px "Cormorant Garamond"';
+            ctx.fillText(`Gold: ${gold}`, 20, 30);
+            ctx.fillText(`Lives: ${lives}`, 20, 60);
+            ctx.fillText(`Wave: ${wave}`, 20, 90);
+
+            if (gameOver) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#d4af37';
+                ctx.font = '48px "Cormorant Garamond"';
+                ctx.textAlign = 'center'; // Only center align for game over text
+                ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
+                ctx.font = '24px "Cormorant Garamond"';
+                ctx.fillText(`Waves Survived: ${wave}`, canvas.width/2, canvas.height/2 + 50);
+            }
+        }
+
+        function updateGame() {
+            if (gameOver) return;
+
+            // Update enemies
+            enemies = enemies.filter(enemy => {
+                enemy.move();
+                if (enemy.health <= 0) {
+                    gold += enemy.worth || 25;
+                    
+                    // Show defeat quote with random slight offset for variety
+                    const quote = DEFEAT_QUOTES[Math.floor(Math.random() * DEFEAT_QUOTES.length)];
+                    const xOffset = (Math.random() - 0.5) * 150; // Wider horizontal spread
+                    const text = new FloatingText(enemy.x, enemy.y - 20, quote);
+                    text.x += xOffset;
+                    floatingTexts.push(text);
+                    
+                    // Create particles for visual effect
+                    particles.createExplosion(enemy.x, enemy.y, enemy.color);
+                    return false;
+                }
+                if (enemy.pathIndex >= enemy.path.length) {
+                    lives--;
+                    if (lives <= 0) gameOver = true;
+                    return false;
+                }
+                return true;
+            });
+
+            // Limit number of visible texts but keep more
+            if (floatingTexts.length > 4) { // Allow more visible texts
+                floatingTexts = floatingTexts.slice(-4);
+            }
+
+            // Update floating texts
+            floatingTexts = floatingTexts.filter(text => text.update());
+
+            // Update towers
+            towers.forEach(tower => tower.attack(enemies));
+
+            // Check wave status
+            checkWaveComplete();
+        }
+
+        function updateTowerOptions() {
+            document.querySelectorAll('.tower-option').forEach(option => {
+                const towerType = option.dataset.tower;
+                if (gold < TOWER_COSTS[towerType]) {
+                    option.classList.add('cannot-afford');
+                } else {
+                    option.classList.remove('cannot-afford');
+                }
+            });
+        }
+
+        function gameLoop() {
+            // Clear canvas
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw game elements
+            drawGrid();
+            drawPath();
+            drawTowers();
+            drawEnemies();
+            
+            // Update and draw particles
+            particles.update();
+            particles.draw(ctx);
+            
+            // Draw floating texts
+            floatingTexts.forEach(text => text.draw(ctx));
+            
+            drawUI();
+            updateTowerOptions();
+
+            // Update game state
+            updateGame();
+
+            // Continue game loop
+            requestAnimationFrame(gameLoop);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // If we have a tower selected for placement
+            if (selectedTower) {
+                handleTowerPlacement(x, y);
+            } else {
+                // Check if we clicked on an existing tower
+                selectedTowerInstance = towers.find(tower => {
+                    const dx = tower.x - x;
+                    const dy = tower.y - y;
+                    return Math.sqrt(dx * dx + dy * dy) < GRID_SIZE/2;
+                });
+
+                if (selectedTowerInstance) {
+                    showTowerInfo(selectedTowerInstance);
+                } else {
+                    hideTowerInfo();
+                }
+            }
+        });
+
+        function showTowerInfo(tower) {
+            const info = document.querySelector('.tower-info');
+            info.style.display = 'block';
+            
+            const stats = document.querySelector('.tower-stats');
+            const upgrade = UPGRADE_PATHS[tower.type][tower.level];
+            
+            stats.innerHTML = `
+                Level: ${tower.level + 1}
+                Damage: ${tower.damage}
+                Range: ${tower.range}
+                ${upgrade ? `Upgrade Cost: ${upgrade.cost}` : 'Max Level'}
+            `;
+        }
+
+        function upgradeTower() {
+            if (selectedTowerInstance) {
+                selectedTowerInstance.upgrade();
+                showTowerInfo(selectedTowerInstance);
+            }
+        }
+
+        function useSpecial() {
+            if (selectedTowerInstance) {
+                selectedTowerInstance.useSpecial(enemies);
+            }
+        }
+
+        function hideTowerInfo() {
+            const info = document.querySelector('.tower-info');
+            info.style.display = 'none';
+        }
+    </script>
+</body>
+</html> 
