@@ -1,0 +1,283 @@
+/* Bon Bon Delights Custom Theme */
+
+/* Pretentious Chocolates - Original Template Enhanced */
+
+/* Restore original template colors with Pretentious Chocolates branding */
+:root {
+  --bg-dark: #080808;
+  --text-light: #e9e9e9;
+  --text-muted: #999;
+  --border-color: #555;
+  --border-focus: #ccc;
+  --border-error: #8e0000;
+  --btn-bg: rgba(7, 7, 7, .5);
+  --btn-border: #555;
+  --gold-accent: #FFD700;
+  --luxury-gold: #FFA500;
+}
+
+/* Header styling - restore original */
+.header {
+  background: var(--bg-dark);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  padding: 20px 0;
+}
+
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo styling - ensure proper display */
+.logo img {
+  height: 60px;
+  width: auto;
+  max-width: 250px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: all 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+}
+
+/* Navigation - restore original styling */
+.main-menu ul li a {
+  color: var(--text-light) !important;
+  transition: all 0.3s ease;
+}
+
+.main-menu ul li a:hover,
+.main-menu ul li.current a {
+  color: var(--gold-accent) !important;
+}
+
+/* Page backgrounds - restore original */
+.page {
+  background: var(--bg-dark);
+  color: var(--text-light);
+}
+
+.page#home {
+  background: linear-gradient(rgba(8, 8, 8, 0.8), rgba(8, 8, 8, 0.8)), url(images/bg_home.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Headings - restore original with gold accent */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-light) !important;
+}
+
+h1 {
+  color: var(--gold-accent) !important;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* Buttons - restore original template styling */
+.btn {
+  background: var(--btn-bg);
+  color: var(--text-muted) !important;
+  border: 1px solid var(--btn-border);
+  border-radius: 27px;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+}
+
+.btn:hover {
+  color: var(--gold-accent) !important;
+  border-color: var(--gold-accent);
+}
+
+/* Menu/Products section - restore original styling */
+.menu-slider .item h3 {
+  color: var(--text-light) !important;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.menu-slider .item ul li {
+  color: var(--text-light);
+  border-bottom: 1px dotted var(--border-color);
+}
+
+.menu-slider .item ul li strong {
+  color: var(--gold-accent);
+}
+
+/* Gallery - restore original styling */
+.gallery .cats ul li a {
+  color: var(--text-light) !important;
+  background: var(--btn-bg);
+  border: 1px solid var(--border-color);
+}
+
+.gallery .cats ul li.current a,
+.gallery .cats ul li a:hover {
+  background: var(--gold-accent);
+  color: var(--bg-dark) !important;
+}
+
+/* Services section - restore original styling */
+.services .ico {
+  background: var(--btn-bg);
+  color: var(--gold-accent);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border: 1px solid var(--border-color);
+}
+
+.services .ico i {
+  font-size: 2rem;
+}
+
+/* Reviews - restore original styling */
+.reviews-slider .item h3 {
+  color: var(--text-light) !important;
+}
+
+.reviews-slider blockquote {
+  border-left: 4px solid var(--gold-accent);
+  background: var(--btn-bg);
+  padding: 20px;
+  border-radius: 0 10px 10px 0;
+  color: var(--text-light);
+}
+
+/* Contact section - restore original styling */
+.contact h4 {
+  color: var(--text-light) !important;
+}
+
+.contact .social li a {
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.contact .social li a:hover {
+  color: var(--gold-accent);
+  transform: scale(1.2);
+}
+
+/* Form styling - restore original template styling */
+input[type="text"], 
+input[type="email"], 
+textarea {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-light);
+  border-radius: 25px;
+  padding: 0 20px;
+  height: 50px;
+  transition: all 0.15s ease;
+}
+
+textarea {
+  height: 160px;
+  padding-top: 20px;
+  resize: none;
+}
+
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+textarea:focus {
+  border-color: var(--border-focus);
+  outline: none;
+}
+
+/* Footer - restore original styling */
+.footer {
+  background: var(--bg-dark);
+  color: var(--text-light);
+}
+
+.footer .social li a {
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.footer .social li a:hover {
+  color: var(--gold-accent);
+  transform: scale(1.2);
+}
+
+/* Indicate dots - restore original styling */
+.indicate-dots ul li a {
+  background: var(--btn-bg);
+  border: 1px solid var(--border-color);
+}
+
+.indicate-dots ul li.current a {
+  background: var(--gold-accent);
+  border-color: var(--gold-accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+}
+
+/* Fix parallax header cutoff issues */
+body.load-onescroll .page {
+  -webkit-transform: translateY(10vh) !important;
+  transform: translateY(10vh) !important;
+}
+
+body.load-onescroll .page:first-child {
+  -webkit-transform: translateY(0vh) !important;
+  transform: translateY(0vh) !important;
+}
+
+body.load-onescroll .page.current {
+  -webkit-transform: translateY(0vh) !important;
+  transform: translateY(0vh) !important;
+  opacity: 1 !important;
+}
+
+/* Ensure headers are always visible */
+.page h1,
+.page h2 {
+  margin-top: 0;
+  padding-top: 20px;
+}
+
+/* Additional parallax fixes */
+body.load-onescroll .page.up-scroll {
+  -webkit-transform: translate3d(0, -5vh, 0) !important;
+  transform: translate3d(0, -5vh, 0) !important;
+}
+
+body.load-onescroll .page.down-scroll {
+  -webkit-transform: translate3d(0, -110vh, 0) !important;
+  transform: translate3d(0, -110vh, 0) !important;
+}
+
+/* Ensure container content is properly positioned */
+.page .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Fix for header visibility during transitions */
+.page.current .container h1,
+.page.current .container h2 {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease;
+}

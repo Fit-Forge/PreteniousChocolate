@@ -1,0 +1,60 @@
+<svg width="300" height="120" viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFA500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle with brushstroke effect -->
+  <path d="M 150 20 A 80 80 0 0 1 230 100 A 80 80 0 0 1 150 20" 
+        fill="none" 
+        stroke="url(#goldGradient)" 
+        stroke-width="4" 
+        stroke-linecap="round"
+        filter="url(#glow)"/>
+  
+  <!-- Main text: Pretentious -->
+  <text x="150" y="45" 
+        font-family="serif" 
+        font-size="28" 
+        font-weight="bold" 
+        fill="url(#goldGradient)" 
+        text-anchor="middle"
+        filter="url(#glow)">Pretentious</text>
+  
+  <!-- CHOCOLATES -->
+  <text x="150" y="65" 
+        font-family="sans-serif" 
+        font-size="14" 
+        font-weight="bold" 
+        fill="url(#goldGradient)" 
+        text-anchor="middle"
+        letter-spacing="3px">CHOCOLATES</text>
+  
+  <!-- UNAPOLOGETICALLY OPULENT -->
+  <text x="150" y="80" 
+        font-family="sans-serif" 
+        font-size="10" 
+        font-weight="bold" 
+        fill="url(#goldGradient)" 
+        text-anchor="middle"
+        letter-spacing="2px">UNAPOLOGETICALLY OPULENT</text>
+  
+  <!-- BON BONS BY BRIAN HOLM -->
+  <text x="150" y="95" 
+        font-family="sans-serif" 
+        font-size="10" 
+        font-weight="bold" 
+        fill="url(#goldGradient)" 
+        text-anchor="middle"
+        letter-spacing="2px">BON BONS BY BRIAN HOLM</text>
+</svg>

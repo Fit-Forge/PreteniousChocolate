@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<head lang="en">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+	<title>Molly Paradise Documentation Template</title>
+	<!-- Framework CSS -->
+	<link rel="stylesheet" href="assets/blueprint-css/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="assets/blueprint-css/print.css" type="text/css" media="print">
+	<!--[if lt IE 8]><link rel="stylesheet" href="assets/blueprint-css/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	<link rel="stylesheet" href="assets/blueprint-css/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
+	<style type="text/css" media="screen">
+		p, table, hr, .box { margin-bottom:25px; }
+		.box p { margin-bottom:10px; }
+	</style>
+</head>
+
+
+<body>
+	<div class="container">
+	
+		<h3 class="center alt">&ldquo;MollyParaside&rdquo; Documentation by &ldquo;Martynas&rdquo; v1.0</h3>
+		
+		<hr>
+		
+		<h1 class="center">&ldquo;MollyParaside&rdquo;</h1>
+		
+		<div class="borderTop">
+			<div class="span-6 colborder info prepend-1">
+				<p class="prepend-top">
+					<strong>
+					Created: 2018/02/11<br>
+					By: Martynas Skardinskas<br>
+					Email: <a href="mailto:martynas@skardinskas.lt">martynas@skardinskas.lt</a>
+					</strong>
+				</p>
+			</div><!-- end div .span-6 -->		
+	
+			<div class="span-12 last">
+				<p class="prepend-top append-0">Thank you for purchasing my theme. If you have any questions that are beyond the scope of this help file, please feel free to email via my user page contact form <a href="http://themeforest.net/user/grep?ref=grep">here</a>. Thanks so much!</p>
+			</div>
+		</div><!-- end div .borderTop -->
+		
+		<hr>
+		
+		<h2 id="toc" class="alt">Table of Contents</h2>
+		<ol class="alpha">
+			<li><a href="#htmlStructure">HTML Structure</a></li>
+			<li><a href="#cssFiles">CSS Files and Structure</a></li>
+			<li><a href="#javascript">JavaScript</a></li>
+			<li><a href="#psdFiles">PSD Files</a></li>
+			<li><a href="#credits">Sources and Credits</a></li>
+		</ol>
+		
+		<hr>
+		
+		<h3 id="htmlStructure"><strong>A) HTML Structure</strong> - <a href="#toc">top</a></h3>
+		<p>All information is in <strong>ONE</strong> file, you will be able to edit is very easily and it loads very fast.</p>
+		<p>This template have a fixed layout optimized for all resolutions. All the elements in the code are named with appropriate IDs and Classes, so you can easily find what you need to edit in the HTML and the CSS. Each page is in seprate HTML file.</p>
+		<br>
+		<p><strong>Menu</strong></p>
+		<p><img src="assets/images/menu.jpg" alt="HTML Menu" style=" display:block; border: 1px solid #CCC;" /></p>
+		<p>You should use "#/YOURPAGENAME(ID)", E.g. if you wan to add services page, you have created <pre>&lt;div class="page" id=&quot;services&quot;&gt;&lt;/div&gt;</pre> 
+		then menu item will loook like this: <pre>&lt;li&gt;&lt;a href=&quot;#services&quot;&gt;Our Services&lt;/a&gt;&lt;/li&gt;</pre>  
+		</p>
+		<p>here is whole menu structure:</p>
+		<pre>      &lt;nav class=&quot;main-menu&quot;&gt;
+        &lt;ul&gt;
+          &lt;li class=&quot;current&quot;&gt;&lt;a href=&quot;#home&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#menu&quot;&gt;Menu&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#gallery&quot;&gt;Gallery&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#chefs&quot;&gt;Chefs&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#reviews&quot;&gt;Reviews&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/nav&gt;
+		</pre>
+		
+		<br>
+		<hr>
+		<p><strong>Change contact address</strong></p>
+		<p>Open send.php file and edit nobody@example.com to your email address.</p>
+
+		<hr>
+		
+		<h3 id="cssFiles"><strong>B) CSS Files and Structure</strong> - <a href="#toc">top</a></h3>
+
+		<p>I'm using two CSS files in this theme. </p>
+		
+		<p>The main.css file contains all of the specific stylings for the page.</p>
+		<p>The vendor.css file contains all of the specific stylings for vendors (e.g. bootstrap grid, fontawesome, fancybox and etc.).</p>
+
+		<hr>
+		
+		<h3 id="javascript"><strong>C) JavaScript</strong> - <a href="#toc">top</a></h3>
+		
+		<p>This theme imports three Javascript files.</p>
+		
+		<ol>
+			<li>jQuery</li>
+			<li>jQuery slick</li>
+			<li>jQuery One-Page-Nav</li>
+			<li>jQuery fancybox</li>
+			<li>Custom script</li>
+			</ol>
+		  		  
+		<ol>
+			<li>jQuery is a Javascript library that greatly reduces the amount of code that you must write.</li>
+			<li>jQuery slick - all galleries, slideshow is based on this.</li>
+			<li>jQuery One-Page-Nav - activates current menu item.</li>
+			<li>jQuery fancybox - lightbox library used for gallery.</li>
+			<li>Most of the animation in this site is carried out from the customs scripts.</li>
+		</ol>
+		
+		<hr>
+		
+		<h3 id="psdFiles"><strong>D) PSD Files</strong> - <a href="#toc">top</a></h3>
+		
+		<p>I've included 1 psd file with groups with name of content type, place. In these PSDs you will find all main elements of design. There also is separate documentation.pdf for PSD usage instructions.</p>
+<hr>
+	
+		<h3 id="credits"><strong>E) Sources and Credits</strong> - <a href="#toc">top</a></h3>
+			
+		<ul>
+			<li>jQuery - <a href="http://jquery.com/">jquery.com/</a></li>
+			<li>jQuery slick - <a href="http://kenwheeler.github.io/slick/">kenwheeler.github.io/slick/</a></li>
+			<li>jQuery One-Page-Nav - <a href="https://fancyapps.com/fancybox/3/">github.com/davist11/jQuery-One-Page-Nav/</a></li>
+			<li>jQuery fancyapps - <a href="https://fancyapps.com/fancybox/3/">fancyapps.com/fancybox/3/</a></li>
+			<li>Most of the animation in this site is carried out from the customs scripts.</li>
+		</ul>
+		
+		<hr>
+		
+		<p>Once again, thank you so much for purchasing this theme. As I said at the beginning, I'd be glad to help you if you have any questions relating to this theme. No guarantees, but I'll do my best to assist. If you have a more general question relating to the themes on ThemeForest, you might consider visiting the forums and asking your question in the "Item Discussion" section.</p> 
+		
+		<p class="append-bottom alt large"><strong>Martynas Skardinskas</strong></p>
+		<p><a href="#toc">Go To Table of Contents</a></p>
+		
+		<hr class="space">
+	</div><!-- end div .container -->
+</body>
+</html>
